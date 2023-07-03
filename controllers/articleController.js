@@ -1,8 +1,6 @@
 const Article = require('../models/Article');
 const multer = require('multer');
 
-const upload = multer({ dest: 'images/' });
-
 // Add new article
 const addArticle = async (req, res) => {
     try{
@@ -176,4 +174,14 @@ const deleteImageFromArticle = async (req, res) => {
         console.error('Error removing image from article:', err);
         res.status(500).json({ err: 'Failed to remove image from article' });
     }
+}
+
+module.exports = {
+    addArticle: addArticle,
+    editArticle: editArticle,
+    getArticles: getArticles,
+    getArticle: getArticle,
+    deleteArtcile: deleteArtcile,
+    addImageToArticle: addImageToArticle,
+    deleteImageFromArticle: deleteImageFromArticle
 }
