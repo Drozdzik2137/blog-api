@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
-const secure = require('./middleware/verifyJWT');
+const secure = require('./middleware/authenticateUser');
 const credentials = require('./middleware/credentials');
 const db = require('./config/db');
 require('dotenv').config();
@@ -24,6 +24,9 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api', require('./routes/article'));
+
+app.use(secure.authenticateUser);
+app.use('/api', require('./routes/note'));
 
 // Listening
 const port = process.env.PORT;

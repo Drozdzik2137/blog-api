@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const secure = require('../middleware/verifyJWT');
+const secure = require('../middleware/authMiddleware');
 const path = require('path');
 const multer = require('multer');
 
