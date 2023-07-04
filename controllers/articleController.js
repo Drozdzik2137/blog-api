@@ -1,17 +1,36 @@
 const Article = require('../models/Article');
-const multer = require('multer');
+const fs = require('fs');
+
+const deleteFile = (filePath) => {
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.log('Error deleting file:' + filePath, err);
+      } else {
+        console.log(`File ${filePath} deleted successfully`);
+      }
+    });
+  };
 
 // Add new article
 const addArticle = async (req, res) => {
     try{
         const { title, description, content, userId } = req.body;
-        const images = req.files.map(file => ({ url: file.path, isMain: false }));
 
-        if(title || description || content || userId || images){
-
+        if (!title || !description || !content || !userId || !req.files || req.files.length === 0) {
+            console.log("Missing data or photos!");
+            // Delete updated file
+            if (req.files && req.files.length > 0) {
+              req.files.forEach(file => fs.unlinkSync(file.path));
+            }
+            return res.sendStatus(400);
+        }else{
+            const images = req.files ? req.files.map(file => ({ url: file.path, isMain: false })) : [];
             // Set first image as main
             if (images.length > 0) {
                 images[0].isMain = true;
+            }else{
+                console.log("Missing data - no photos!");
+                return res.sendStatus(400);
             }
         
             const newArticle = new Article({
@@ -25,64 +44,47 @@ const addArticle = async (req, res) => {
             await newArticle.save();
 
             res.status(201).json(newArticle);
-        }else{
-            console.log("Brakujace dane");
-            res.sendStatus(400);
         }
+
     }catch(err){
-        console.log(err);
-        res.sendStatus(500);
+        console.log('Error adding new article:', err);
+        return res.status(500).json({ err: 'Failed to add new article' });
     }
 }
 
 // Edit already exist article
 const editArticle = async (req, res) => {
     try{
-        const { articleId } = req.params;
+        const { id: articleId } = req.params;
         const { title, description, content, userId } = req.body;
-        const images = req.files.map(file => ({ url: file.path, isMain: false }));
-    
-        if(images){
-            if(title || description || content){
-                // Set first image as main
-                if (images.length > 0) {
-                    images[0].isMain = true;
-                }
-            
-                const updatedArticle = await Article.findByIdAndUpdate(
-                    articleId,
-                    { title: title, description: description, content: content, images: images, userId: userId },
-                    { new: true }
-                );
-                res.status(201).json(updatedArticle);
-            }else{
-                // Set first image as main
-                if (images.length > 0) {
-                    images[0].isMain = true;
-                }
-                const updatedArticle = await Article.findByIdAndUpdate(
-                    articleId,
-                    { images: images },
-                    { new: true }
-                );
-                res.status(201).json(updatedArticle);
-            }
+
+        // Changed to edit only content of article
+        // const images = req.files.map(file => ({ url: file.path, isMain: false }));
+
+        if(!title || !description || !content){
+            console.log("Missing data!");
+            return res.sendStatus(400);
+
         }else{
-            if(title || description || content){
+            if(userId){
                 const updatedArticle = await Article.findByIdAndUpdate(
                     articleId,
                     { title: title, description: description, content: content, userId: userId },
                     { new: true }
                 );
-                res.status(201).json(updatedArticle);
+                res.status(201).json(updatedArticle);                
             }else{
-                console.log("Brakujace dane");
-                res.sendStatus(400);
+                const updatedArticle = await Article.findByIdAndUpdate(
+                    articleId,
+                    { title: title, description: description, content: content },
+                    { new: true }
+                );
+                res.status(201).json(updatedArticle);
             }
         }
     }catch(err){
         console.log('Error updating article:', err);
-        res.status(500).json({ err: 'Failed to update article' });
+        return res.status(500).json({ err: 'Failed to update article' });
     }
 }
 
@@ -97,10 +99,10 @@ const getArticles = async (req, res) => {
             }
         });
         res.status(200).json(articles);
-      } catch (err) {
-        console.log('Error fetching articles:', err);
-        res.status(500).json({ err: 'Failed to fetch articles' });
-      }
+    }catch(err){
+    console.log('Error fetching articles:', err);
+    return res.status(500).json({ err: 'Failed to fetch articles' });
+    }
 }
 
 // Read single article
@@ -109,12 +111,13 @@ const getArticle = async (req, res) => {
         const { id } = req.params;
         const article = await Article.findById(id);
         if (!article) {
-          return res.status(404).json({ err: 'Article not found' });
+            console.log('Article not found');
+            return res.sendStatus(404);
         }
         res.status(200).json(article);
-    } catch (err) {
+    }catch(err){
         console.log('Error fetching article:', err);
-        res.status(500).json({ err: 'Failed to fetch article' });
+        return res.status(500).json({ err: 'Failed to fetch article' });
     }
 }
 
@@ -122,11 +125,32 @@ const getArticle = async (req, res) => {
 const deleteArtcile = async (req, res) => {
     try {
         const { id } = req.params;
-        await Article.findByIdAndRemove(id);
-        res.status(200).json({ message: 'Article deleted successfully' });
-    } catch (err) {
-        console.error('Error deleting article:', err);
-        res.status(500).json({ err: 'Failed to delete article' });
+
+        // Read an article that you want to delete
+        const article = await Article.findById(id);
+
+        // If exist delete images from an article
+        if (article) {
+            // Read array with images urls
+            const imageUrls = article.images.map((image) => image.url);
+
+            // Delete an image from server
+            imageUrls.forEach((imageUrl) => {
+                deleteFile(imageUrl);
+            });
+
+            // Remove aricle from DB
+            await Article.findByIdAndRemove(id);
+            res.status(200).json({ message: 'Article deleted successfully' });
+        }else{
+            console.log('Article not found');
+            return res.sendStatus(404);
+        }
+
+
+    }catch(err){
+        console.log('Error deleting article:', err);
+        return res.status(500).json({ err: 'Failed to delete article' });
     }
 }
 
@@ -134,45 +158,81 @@ const deleteArtcile = async (req, res) => {
 const addImageToArticle = async (req, res) => {
     try {
         const { id } = req.params;
-        const images = req.files.map(file => ({ url: file.path, isMain: false }));
+        console.log(id, req.files, req.files.length);
+        if(id && req.files && req.files.length > 0){
+            const images = req.files.map(file => ({ url: file.path, isMain: false }));
+        
+            const existingArticle = await Article.findById(id);
+            if (!existingArticle) {
+                console.log('Article not found');
+                return res.sendStatus(404);
+            }
+        
+            if (existingArticle.images.length === 0) {
+              images[0].isMain = true;
+            }
     
-        const existingArticle = await Article.findById(id);
-        if (!existingArticle) {
-          return res.status(404).json({ error: 'Article not found' });
+            existingArticle.images.push(...images);
+            await existingArticle.save();
+        
+            res.status(200).json(existingArticle);
+        }else{
+            if (req.files && req.files.length > 0) {
+                req.files.forEach(file => fs.unlinkSync(file.path));
+            }
+            console.log("Missing id or photos!");
+            return res.sendStatus(400)
         }
-    
-        let isMainImageSet = false;
-        if (existingArticle.images.length === 0) {
-          images[0].isMain = true;
-          isMainImageSet = true;
-        }
-    
-        const updatedImages = isMainImageSet ? images : [existingArticle.images[0], ...images];
-        existingArticle.images.push(...updatedImages);
-        await existingArticle.save();
-    
-        res.status(200).json(existingArticle);
-      } catch (err) {
+    }catch(err){
         console.log('Error adding image to article:', err);
-        res.status(500).json({ err: 'Failed to add image to article' });
-      }
+        return res.status(500).json({ err: 'Failed to add image to article' });
+    }
 }
 
 // Delete image from an article
 const deleteImageFromArticle = async (req, res) => {
     try {
         const { articleId, imageId } = req.params;
-    
-        const updatedArticle = await Article.findByIdAndUpdate(
-          articleId,
-          { $pull: { images: { _id: imageId } } },
-          { new: true }
-        );
-    
-        res.status(200).json(updatedArticle);
-    } catch (err) {
-        console.error('Error removing image from article:', err);
-        res.status(500).json({ err: 'Failed to remove image from article' });
+
+        if(articleId && imageId){
+
+            // Read the article from which you want to remove an image
+            const article = await Article.findById(articleId);
+
+            // If exist delete images from an article
+            if (article) {
+                let isImageFound = false;
+                // Read array with images urls
+                article.images.forEach(async (image) => {
+                    if (image.id === imageId) {
+                        // Delete the image from the server
+                        deleteFile(image.url);
+                        isImageFound = true;
+                    }
+                });
+                if (isImageFound) {
+                    const updatedArticle = await Article.findByIdAndUpdate(
+                        articleId,
+                        { $pull: { images: { _id: imageId } } },
+                        { new: true }
+                    );
+                    res.status(200).json(updatedArticle);
+                }else{
+                    console.log('Image not found');
+                    return res.sendStatus(404);
+                }
+            }else{
+                console.log('Article not found');
+                return res.sendStatus(404);
+            }
+        }else{
+            console.log("Missing articleId or imageId!");
+            return res.sendStatus(400)
+        }   
+
+    }catch(err){
+        console.log('Error removing image from article:', err);
+        return res.status(500).json({ err: 'Failed to remove image from article' });
     }
 }
 

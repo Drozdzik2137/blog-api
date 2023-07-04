@@ -22,6 +22,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
+// Routes
+app.use('/api', require('./routes/article'));
+
 // Listening
 const port = process.env.PORT;
 mongoose.connection.once('open', () => {
