@@ -3,15 +3,18 @@ const router = express.Router();
 const secure = require('../middleware/authMiddleware');
 const path = require('path');
 const multer = require('multer');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'images/');
+      const path = 'images/';
+      fs.mkdir(path, err => cb(err, path));
+      // cb(null, 'images/');
     },
     filename: function (req, file, cb) {
-        const ext = path.extname(file.originalname);
-        const filename = `${Date.now()}${ext}`;
-        cb(null, filename);
+      const ext = path.extname(file.originalname);
+      const filename = `${Date.now()}${ext}`;
+      cb(null, filename);
     }
 });
 
