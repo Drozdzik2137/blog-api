@@ -31,6 +31,15 @@ const UserSchema = new mongoose.Schema(
             type: Schema.Types.ObjectId,
             ref: 'note',
         }],
+        createdAt: {
+            type: Date,
+            require: true
+        },
+        role: {
+            type: Number,
+            require: true,
+            default: 1
+        },
         isActive: {
             type: Boolean,
             require: true,

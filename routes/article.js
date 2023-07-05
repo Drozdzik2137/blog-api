@@ -32,24 +32,24 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 const articleController = require('../controllers/articleController');
 
 // Add new article
-router.route('/article').post(upload.array('images'), articleController.addArticle);
+router.route('/article').post(secure.authenticateUser, upload.array('images'), articleController.addArticle);
 
 // Edit an article
-router.route('/article/:id').put(articleController.editArticle);
+router.route('/article/:id').put(secure.authenticateUser, articleController.editArticle);
 
 // Delete an article
-router.route('/article/:id').delete(articleController.deleteArtcile);
+router.route('/article/:id').delete(secure.authenticateUser, articleController.deleteArtcile);
 
-// Get an article
+// Get an article - no need JWT auth
 router.route('/article/:id').get(articleController.getArticle);
 
-// Get all articles
+// Get all articles - no need JWT auth
 router.route('/articles').get(articleController.getArticles);
 
 // Add images to article
-router.route('/article/:id/images').post(upload.array('images'), articleController.addImageToArticle);
+router.route('/article/:id/images').post(secure.authenticateUser, upload.array('images'), articleController.addImageToArticle);
 
 // Delete an image (single image) from an article
-router.route('/article/:articleId/images/:imageId').delete(articleController.deleteImageFromArticle);
+router.route('/article/:articleId/images/:imageId').delete(secure.authenticateUser, articleController.deleteImageFromArticle);
 
 module.exports = router;

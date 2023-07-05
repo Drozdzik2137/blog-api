@@ -60,7 +60,7 @@ const updateNote = async (req, res) => {
   try {
     const userId = req.user.id; 
     const { noteId } = req.params;
-    if(!userId || noteId){
+    if(!userId || !noteId){
         console.log('Missing userId and noteId!')
         return res.sendStatus(404);
     }
@@ -78,9 +78,9 @@ const updateNote = async (req, res) => {
         console.log('Note not found');
         return res.sendStatus(404);
     }
-    
+
     // Check whether the logged-in user is the owner of the note
-    if(findNote.userId !== userId){
+    if((findNote.userId).toString() !== userId){
         console.log('Unauthorized access');
         return res.sendStatus(403);
     }
@@ -104,15 +104,15 @@ const deleteNote = async (req, res) => {
       const { noteId } = req.params;
   
       // Sprawdź, czy notatka istnieje
-      const note = await Note.findById(noteId);
+      const findNote = await Note.findById(noteId);
   
-      if (!note) {
+      if (!findNote) {
         console.log('Note not found');
         return res.sendStatus(404);
       }
   
       // Check whether the logged-in user is the owner of the note
-      if (note.userId !== req.user._id) {
+      if ((findNote.userId).toString() !== req.user.id) {
         console.log('Unauthorized access');
         return res.sendStatus(403);
       }

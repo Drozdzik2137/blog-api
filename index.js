@@ -24,7 +24,10 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api', require('./routes/article'));
+app.use('/api', require('./routes/auth'));
+app.use('/api', require('./routes/user'));
 
+// All routes below secure authenticateUser require jwt authentication
 app.use(secure.authenticateUser);
 app.use('/api', require('./routes/note'));
 
