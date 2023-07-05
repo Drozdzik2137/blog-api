@@ -1,9 +1,17 @@
 const Note = require('../models/Note');
+const User = require('../models/User');
 
 // Read user notes
 const getUserNotes = async (req, res) => {
   try {
     const userId = req.user.id;
+    const findUser = await User.findById(userId);
+
+    if(findUser.role !== 101 && findUser.role !== 1001){
+        console.log("Unauthorized!");
+        return res.sendStatus(403);
+    }
+
     if(!userId){
         console.log('Missing user id!')
         return res.sendStatus(404);
@@ -20,6 +28,13 @@ const getUserNotes = async (req, res) => {
 const createNote = async (req, res) => {
   try {
     const userId = req.user.id;
+    const findUser = await User.findById(userId);
+
+    if(findUser.role !== 101 && findUser.role !== 1001){
+        console.log("Unauthorized!");
+        return res.sendStatus(403);
+    }
+
     const { title, content } = req.body;
     if(!userId || !title || !content){
         console.log('Missing user id or note data!')
@@ -31,7 +46,12 @@ const createNote = async (req, res) => {
       createdAt: new Date(),
       userId: userId
     });
+
+    // Add note to notes array at the user in DB
+    findUser.notes.push(newNote._id);
+
     await newNote.save();
+    await findUser.save();
     res.status(201).json(newNote);
   } catch (err) {
     console.log('Error creating note:', err);
@@ -43,6 +63,13 @@ const createNote = async (req, res) => {
 const getNote = async (req, res) => {
   try {
     const userId = req.user.id; 
+    const findUser = await User.findById(userId);
+
+    if(findUser.role !== 101 && findUser.role !== 1001){
+        console.log("Unauthorized!");
+        return res.sendStatus(403);
+    }
+
     const { noteId } = req.params;
     const note = await Note.findOne({ _id: noteId, userId });
     if (!note) {
@@ -58,7 +85,14 @@ const getNote = async (req, res) => {
 // Edytuj notatkę użytkownika
 const updateNote = async (req, res) => {
   try {
-    const userId = req.user.id; 
+    const userId = req.user.id;    
+    const findUser = await User.findById(userId);
+
+    if(findUser.role !== 101 && findUser.role !== 1001){
+        console.log("Unauthorized!");
+        return res.sendStatus(403);
+    }
+
     const { noteId } = req.params;
     if(!userId || !noteId){
         console.log('Missing userId and noteId!')
@@ -102,6 +136,13 @@ const updateNote = async (req, res) => {
 const deleteNote = async (req, res) => {
     try {
       const { noteId } = req.params;
+      const userId = req.user.id;
+      const findUser = await User.findById(userId);
+
+      if(findUser.role !== 101 && findUser.role !== 1001){
+          console.log("Unauthorized!");
+          return res.sendStatus(403);
+      }
   
       // Sprawdź, czy notatka istnieje
       const findNote = await Note.findById(noteId);
@@ -112,10 +153,15 @@ const deleteNote = async (req, res) => {
       }
   
       // Check whether the logged-in user is the owner of the note
-      if ((findNote.userId).toString() !== req.user.id) {
+      if ((findNote.userId).toString() !== userId) {
         console.log('Unauthorized access');
         return res.sendStatus(403);
       }
+
+      // Delete note from notes array at the user in DB
+      findUser.notes.pull(findNote._id);
+
+      await findUser.save();
   
       // Delete note
       await Note.findByIdAndDelete(noteId);

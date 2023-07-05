@@ -1,5 +1,6 @@
 const Article = require('../models/Article');
 const fs = require('fs');
+const User = require('../models/User');
 
 const deleteFile = (filePath) => {
     fs.unlink(filePath, (err) => {
@@ -14,7 +15,19 @@ const deleteFile = (filePath) => {
 // Add new article
 const addArticle = async (req, res) => {
     try{
-        const { title, description, content, userId } = req.body;
+        const userId = req.user.id;
+        const { title, description, content } = req.body;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            // Delete updated file
+            if (req.files && req.files.length > 0) {
+              req.files.forEach(file => fs.unlinkSync(file.path));
+            }
+            return res.sendStatus(403);
+        }
 
         if (!title || !description || !content || !userId || !req.files || req.files.length === 0) {
             console.log("Missing data or photos!");
@@ -41,8 +54,15 @@ const addArticle = async (req, res) => {
                 createdAt: new Date(), 
                 userId: userId
             });
-            await newArticle.save();
+            
+            // Add articleId to articles array at the user in DB
+            // const updateUser = await User.findByIdAndUpdate(userId,
+            //     {$push: { articles: newArticle._id}}
+            // );
+            findUser.articles.push(newArticle._id);
 
+            await newArticle.save();
+            await findUser.save();
             res.status(201).json(newArticle);
         }
 
@@ -55,8 +75,16 @@ const addArticle = async (req, res) => {
 // Edit already exist article
 const editArticle = async (req, res) => {
     try{
+        const userId = req.user.id;
         const { id: articleId } = req.params;
-        const { title, description, content, userId } = req.body;
+        const { title, description, content } = req.body;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
 
         // Changed to edit only content of article
         // const images = req.files.map(file => ({ url: file.path, isMain: false }));
@@ -125,6 +153,18 @@ const getArticle = async (req, res) => {
 const deleteArtcile = async (req, res) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            // Delete updated file
+            if (req.files && req.files.length > 0) {
+              req.files.forEach(file => fs.unlinkSync(file.path));
+            }
+            return res.sendStatus(403);
+        }
 
         // Read an article that you want to delete
         const article = await Article.findById(id);
@@ -138,6 +178,10 @@ const deleteArtcile = async (req, res) => {
             imageUrls.forEach((imageUrl) => {
                 deleteFile(imageUrl);
             });
+
+            // Remove articleId form user articles array
+            findUser.articles.pull(id);
+            await findUser.save();
 
             // Remove aricle from DB
             await Article.findByIdAndRemove(id);
@@ -158,8 +202,20 @@ const deleteArtcile = async (req, res) => {
 const addImageToArticle = async (req, res) => {
     try {
         const { id } = req.params;
-        console.log(id, req.files, req.files.length);
+        
         if(id && req.files && req.files.length > 0){
+            const userId = req.user.id;
+            const findUser = await User.findById(userId);
+
+            if(findUser.role !== 101 && findUser.role !== 1001){
+                console.log("Unauthorized!");
+                // Delete updated file
+                if (req.files && req.files.length > 0) {
+                  req.files.forEach(file => fs.unlinkSync(file.path));
+                }
+                return res.sendStatus(403);
+            }
+
             const images = req.files.map(file => ({ url: file.path, isMain: false }));
         
             const existingArticle = await Article.findById(id);
@@ -193,6 +249,14 @@ const addImageToArticle = async (req, res) => {
 const deleteImageFromArticle = async (req, res) => {
     try {
         const { articleId, imageId } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
 
         if(articleId && imageId){
 
