@@ -8,8 +8,8 @@ const fs = require('fs');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       const path = 'images/';
-      fs.mkdir(path, err => cb(err, path));
-      // cb(null, 'images/');
+      fs.mkdirSync(path, { recursive: true });
+      cb(null, 'images/');
     },
     filename: function (req, file, cb) {
       const ext = path.extname(file.originalname);
