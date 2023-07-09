@@ -10,7 +10,7 @@ const deleteFile = (filePath) => {
         console.log(`File ${filePath} deleted successfully`);
       }
     });
-  };
+};
 
 // Add new article
 const addArticle = async (req, res) => {
@@ -108,20 +108,21 @@ const editArticle = async (req, res) => {
             return res.sendStatus(400);
 
         }else{
-            if(userId){
+            const links =  req.body.link ? req.body.link : [];
+            if(links.length > 0){
+                const updatedArticle = await Article.findByIdAndUpdate(
+                    articleId,
+                    { title: title, description: description, content: content, links: newLinks, userId: userId },
+                    { new: true }
+                );
+                res.status(201).json(updatedArticle);                    
+            }else{
                 const updatedArticle = await Article.findByIdAndUpdate(
                     articleId,
                     { title: title, description: description, content: content, userId: userId },
                     { new: true }
                 );
-                res.status(201).json(updatedArticle);                
-            }else{
-                const updatedArticle = await Article.findByIdAndUpdate(
-                    articleId,
-                    { title: title, description: description, content: content },
-                    { new: true }
-                );
-                res.status(201).json(updatedArticle);
+                res.status(201).json(updatedArticle);    
             }
         }
     }catch(err){
@@ -133,13 +134,7 @@ const editArticle = async (req, res) => {
 // Read all articles
 const getArticles = async (req, res) => {
     try {
-        const articles = await Article.find({}, 'title description images.url').lean();
-        articles.forEach(article => {
-            if (article.images.length > 0) {
-              article.imageUrl = article.images[0].url;
-              delete article.images;
-            }
-        });
+        const articles = await Article.find({ isPublic: true }, 'title description thumbnail createdAt').lean();
         res.status(200).json(articles);
     }catch(err){
     console.log('Error fetching articles:', err);
@@ -152,6 +147,10 @@ const getArticle = async (req, res) => {
     try {
         const { id } = req.params;
         const article = await Article.findById(id);
+        if(!article.isPublic){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
         if (!article) {
             console.log('Article not found');
             return res.sendStatus(404);
@@ -185,12 +184,20 @@ const deleteArtcile = async (req, res) => {
 
         // If exist delete images from an article
         if (article) {
+            // Read array with thumbnail urls
+            const thumbnailUrls = article.thumbnail.map((thumbnail) => thumbnail.url);
+
             // Read array with images urls
             const imageUrls = article.images.map((image) => image.url);
 
             // Delete an image from server
             imageUrls.forEach((imageUrl) => {
                 deleteFile(imageUrl);
+            });
+
+            // Delete an thumbnail from server
+            thumbnailUrls.forEach((thumbnailUrls) => {
+                deleteFile(thumbnailUrls);
             });
 
             // Remove articleId form user articles array
@@ -217,38 +224,34 @@ const addImageToArticle = async (req, res) => {
     try {
         const { id } = req.params;
         
-        if(id && req.files && req.files.length > 0){
+        if(id && req.files.image && req.files.image.length > 0){
             const userId = req.user.id;
             const findUser = await User.findById(userId);
 
             if(findUser.role !== 101 && findUser.role !== 1001){
                 console.log("Unauthorized!");
                 // Delete updated file
-                if (req.files && req.files.length > 0) {
-                  req.files.forEach(file => fs.unlinkSync(file.path));
+                if (req.files.image && req.files.image.length > 0) {
+                  req.files.image.forEach(file => fs.unlinkSync(file.path));
                 }
                 return res.sendStatus(403);
             }
 
-            const images = req.files.map(file => ({ url: file.path, isMain: false }));
+            const images = req.files.image.map(file => ({ url: file.path}) );
         
             const existingArticle = await Article.findById(id);
             if (!existingArticle) {
                 console.log('Article not found');
                 return res.sendStatus(404);
-            }
-        
-            if (existingArticle.images.length === 0) {
-              images[0].isMain = true;
-            }
+            }   
     
             existingArticle.images.push(...images);
             await existingArticle.save();
         
             res.status(200).json(existingArticle);
         }else{
-            if (req.files && req.files.length > 0) {
-                req.files.forEach(file => fs.unlinkSync(file.path));
+            if (req.files.image && req.files.image.length > 0) {
+                req.files.image.forEach(file => fs.unlinkSync(file.path));
             }
             console.log("Missing id or photos!");
             return res.sendStatus(400)
@@ -313,6 +316,8 @@ const deleteImageFromArticle = async (req, res) => {
         return res.status(500).json({ err: 'Failed to remove image from article' });
     }
 }
+
+// Trzeba dodac routes do dodawania i usuwania thumnbail
 
 module.exports = {
     addArticle: addArticle,
