@@ -7,22 +7,31 @@ const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      const path = 'images/';
-      fs.mkdirSync(path, { recursive: true });
-      cb(null, 'images/');
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      const pathImages = `uploads/gallery/${year}-${month}-${day}/`;
+      fs.mkdirSync(pathImages, { recursive: true });
+      const pathThumbnail = `uploads/thumbnail/`;
+      fs.mkdirSync(pathThumbnail, { recursive: true });
+      cb(null, file.fieldname === 'thumbnail' ? pathThumbnail : pathImages);
     },
     filename: function (req, file, cb) {
+      // to set a different file name
       const ext = path.extname(file.originalname);
       const filename = `${Date.now()}${ext}`;
       cb(null, filename);
+      // to set original file name
+      // cb(null, file.originalname);
     }
 });
 
 const fileFilter = function (req, file, cb) {
-    // Zaakceptowane rozszerzenia plików
-    const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+    // Accepted file extensions
+    const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.webm', '.svg'];
   
-    // Sprawdź, czy rozszerzenie pliku jest wśród zaakceptowanych rozszerzeń
+    // Check that the file extension is among the accepted extensions
     const ext = path.extname(file.originalname).toLowerCase();
     if (allowedExtensions.includes(ext)) {
       cb(null, true);
@@ -35,7 +44,14 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 const articleController = require('../controllers/articleController');
 
 // Add new article
-router.route('/article').post(secure.authenticateUser, upload.array('images'), articleController.addArticle);
+router.route('/article').post(secure.authenticateUser, upload.fields([
+  {
+    name: 'image'
+  },
+  {
+    name: 'thumbnail'
+  }
+]), articleController.addArticle);
 
 // Edit an article
 router.route('/article/:id').put(secure.authenticateUser, articleController.editArticle);

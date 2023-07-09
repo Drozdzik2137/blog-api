@@ -22,27 +22,35 @@ const addArticle = async (req, res) => {
 
         if(findUser.role !== 101 && findUser.role !== 1001){
             console.log("Unauthorized!");
-            // Delete updated file
-            if (req.files && req.files.length > 0) {
-              req.files.forEach(file => fs.unlinkSync(file.path));
+            // Delete updated thumbnail
+            if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+            }
+            // Delete updated image
+            if (req.files.image && req.files.image.length > 0) {
+                req.files.image.forEach(file => fs.unlinkSync(file.path));
             }
             return res.sendStatus(403);
         }
 
-        if (!title || !description || !content || !userId || !req.files || req.files.length === 0) {
+        if (!title || !description || !content || !userId || !req.files) {
             console.log("Missing data or photos!");
-            // Delete updated file
-            if (req.files && req.files.length > 0) {
-              req.files.forEach(file => fs.unlinkSync(file.path));
+            // Delete updated thumbnail
+            if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+            }
+            // Delete updated image
+            if (req.files.image && req.files.image.length > 0) {
+                req.files.image.forEach(file => fs.unlinkSync(file.path));
             }
             return res.sendStatus(400);
         }else{
-            const images = req.files ? req.files.map(file => ({ url: file.path, isMain: false })) : [];
+            const images = req.files.image ? req.files.image.map(file => ({ url: file.path })) : [];
+            const thumbnail = req.files.thumbnail ? req.files.thumbnail.map(file => ({ url: file.path })) : [];
+            const links = req.body.link ? req.body.link : [];
             // Set first image as main
-            if (images.length > 0) {
-                images[0].isMain = true;
-            }else{
-                console.log("Missing data - no photos!");
+            if (!thumbnail.length > 0) {
+                console.log("Missing data - no thumbnail!");
                 return res.sendStatus(400);
             }
         
@@ -50,15 +58,13 @@ const addArticle = async (req, res) => {
                 title: title, 
                 description: description, 
                 content: content, 
-                images: images, 
+                thumbnail: thumbnail,
+                images: images,
+                links: links, 
                 createdAt: new Date(), 
                 userId: userId
             });
             
-            // Add articleId to articles array at the user in DB
-            // const updateUser = await User.findByIdAndUpdate(userId,
-            //     {$push: { articles: newArticle._id}}
-            // );
             findUser.articles.push(newArticle._id);
 
             await newArticle.save();
@@ -67,6 +73,14 @@ const addArticle = async (req, res) => {
         }
 
     }catch(err){
+        // Delete updated thumbnail
+        if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+            req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+        }
+        // Delete updated image
+        if (req.files.image && req.files.image.length > 0) {
+            req.files.image.forEach(file => fs.unlinkSync(file.path));
+        }
         console.log('Error adding new article:', err);
         return res.status(500).json({ err: 'Failed to add new article' });
     }
