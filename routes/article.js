@@ -71,4 +71,10 @@ router.route('/article/:id/images').post(secure.authenticateUser, upload.array('
 // Delete an image (single image) from an article
 router.route('/article/:articleId/images/:imageId').delete(secure.authenticateUser, articleController.deleteImageFromArticle);
 
+// Add thumbnail to article
+router.route('/article/:id/images').post(secure.authenticateUser, upload.array('thumbnail'), articleController.addThumbnailToArticle);
+
+// Delete an thumbnail (single thumbnail) from an thumbnail
+router.route('/article/:articleId/images/:imageId').delete(secure.authenticateUser, articleController.deleteThumbnailFromArticle);
+
 module.exports = router;
