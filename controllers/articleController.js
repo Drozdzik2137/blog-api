@@ -317,7 +317,103 @@ const deleteImageFromArticle = async (req, res) => {
     }
 }
 
-// Trzeba dodac routes do dodawania i usuwania thumnbail
+// Add new thumbnail to article
+const addThumbnailToArticle = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if(id && req.files.thumbnail && req.files.thumbnail.length > 0){
+            const userId = req.user.id;
+            const findUser = await User.findById(userId);
+
+            if(findUser.role !== 101 && findUser.role !== 1001){
+                console.log("Unauthorized!");
+                // Delete updated file
+                if (req.files.files && req.files.files.length > 0) {
+                  req.files.files.forEach(file => fs.unlinkSync(file.path));
+                }
+                return res.sendStatus(403);
+            }
+
+            const thumbnail = req.files.files.map(file => ({ url: file.path}) );
+        
+            const existingArticle = await Article.findById(id);
+            if (!existingArticle) {
+                console.log('Article not found');
+                return res.sendStatus(404);
+            }   
+    
+            existingArticle.thumbnail.push(...thumbnail);
+            await existingArticle.save();
+        
+            res.status(200).json(existingArticle);
+        }else{
+            if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+            }
+            console.log("Missing id or photos!");
+            return res.sendStatus(400)
+        }
+    }catch(err){
+        console.log('Error adding thumbnail to article:', err);
+        return res.status(500).json({ err: 'Failed to add thumbnail to article' });
+    }
+}
+
+// Delete thumbnail from an article
+const deleteThumbnailFromArticle = async (req, res) => {
+    try {
+        const { articleId, thumbnailId } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
+
+        if(articleId && thumbnailId){
+
+            // Read the article from which you want to remove an image
+            const article = await Article.findById(articleId);
+
+            // If exist delete images from an article
+            if (article) {
+                let isThumbnailFound = false;
+                // Read array with images urls
+                article.thumbnail.forEach(async (thumbnail) => {
+                    if (thumbnail.id === thumbnailId) {
+                        // Delete the image from the server
+                        deleteFile(thumbnail.url);
+                        isThumbnailFound = true;
+                    }
+                });
+                if (isThumbnailFound) {
+                    const updatedArticle = await Article.findByIdAndUpdate(
+                        articleId,
+                        { $pull: { thumbnail: { _id: thumbnailId } } },
+                        { new: true }
+                    );
+                    res.status(200).json(updatedArticle);
+                }else{
+                    console.log('Thumbnail not found');
+                    return res.sendStatus(404);
+                }
+            }else{
+                console.log('Article not found');
+                return res.sendStatus(404);
+            }
+        }else{
+            console.log("Missing articleId or thumbnailId!");
+            return res.sendStatus(400)
+        }   
+
+    }catch(err){
+        console.log('Error removing thumbnail from article:', err);
+        return res.status(500).json({ err: 'Failed to remove thumbnail from article' });
+    }
+}
 
 module.exports = {
     addArticle: addArticle,
@@ -326,5 +422,7 @@ module.exports = {
     getArticle: getArticle,
     deleteArtcile: deleteArtcile,
     addImageToArticle: addImageToArticle,
-    deleteImageFromArticle: deleteImageFromArticle
+    deleteImageFromArticle: deleteImageFromArticle,
+    addThumbnailToArticle: addThumbnailToArticle,
+    deleteThumbnailFromArticle: deleteThumbnailFromArticle
 }
