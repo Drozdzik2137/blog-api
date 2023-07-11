@@ -68,16 +68,24 @@ router.route('/article/:id').put(secure.authenticateUser, articleController.edit
 router.route('/article/:id').delete(secure.authenticateUser, articleController.deleteArtcile);
 
 // Add images to article
-router.route('/article/:id/images').post(secure.authenticateUser, upload.array('images'), articleController.addImageToArticle);
+router.route('/article/:id/images').post(secure.authenticateUser, upload.fields([
+  {
+    name: 'image'
+  }
+]), articleController.addImageToArticle);
 
 // Delete an image (single image) from an article
 router.route('/article/:articleId/images/:imageId').delete(secure.authenticateUser, articleController.deleteImageFromArticle);
 
 // Add thumbnail to article
-router.route('/article/:id/images').post(secure.authenticateUser, upload.array('thumbnail'), articleController.addThumbnailToArticle);
+router.route('/article/:id/thumbnail').post(secure.authenticateUser, upload.fields([
+  {
+    name: 'thumbnail'
+  }
+]), articleController.addThumbnailToArticle);
 
 // Delete an thumbnail (single thumbnail) from an thumbnail
-router.route('/article/:articleId/images/:imageId').delete(secure.authenticateUser, articleController.deleteThumbnailFromArticle);
+router.route('/article/:articleId/thumbnail/:thumbnailId').delete(secure.authenticateUser, articleController.deleteThumbnailFromArticle);
 
 // Get the article for admin
 router.route('/admin/article/:id').get(secure.authenticateUser, articleController.getArticleForAdmin);

@@ -112,7 +112,7 @@ const editArticle = async (req, res) => {
             if(links.length > 0){
                 const updatedArticle = await Article.findByIdAndUpdate(
                     articleId,
-                    { title: title, description: description, content: content, links: newLinks, userId: userId },
+                    { title: title, description: description, content: content, links: links, userId: userId },
                     { new: true }
                 );
                 res.status(201).json(updatedArticle);                    
@@ -137,8 +137,8 @@ const getArticles = async (req, res) => {
         const articles = await Article.find({ isPublic: true }, 'title description thumbnail createdAt').lean();
         res.status(200).json(articles);
     }catch(err){
-    console.log('Error fetching articles:', err);
-    return res.status(500).json({ err: 'Failed to fetch articles' });
+        console.log('Error fetching articles:', err);
+        return res.status(500).json({ err: 'Failed to fetch articles' });
     }
 }
 
@@ -170,14 +170,10 @@ const getArticlesForAdmin = async (req, res) => {
         const findUser = await User.findById(userId);
 
         if(findUser.role !== 101 && findUser.role !== 1001){
-            console.log("Unauthorized!");
-            // Delete updated file
-            if (req.files && req.files.length > 0) {
-              req.files.forEach(file => fs.unlinkSync(file.path));
-            }
+            console.log("Unauthorized!");            
             return res.sendStatus(403);
         }
-        const articles = await Article.find('title description thumbnail createdAt').lean();
+        const articles = await Article.find({}, 'title description thumbnail createdAt').lean();
         res.status(200).json(articles);
     }catch(err){
     console.log('Error fetching articles:', err);
@@ -195,10 +191,6 @@ const getArticleForAdmin = async (req, res) => {
 
         if(findUser.role !== 101 && findUser.role !== 1001){
             console.log("Unauthorized!");
-            // Delete updated file
-            if (req.files && req.files.length > 0) {
-              req.files.forEach(file => fs.unlinkSync(file.path));
-            }
             return res.sendStatus(403);
         }
 
@@ -293,6 +285,9 @@ const addImageToArticle = async (req, res) => {
         
             const existingArticle = await Article.findById(id);
             if (!existingArticle) {
+                if (req.files.image && req.files.image.length > 0) {
+                    req.files.image.forEach(file => fs.unlinkSync(file.path));
+                }
                 console.log('Article not found');
                 return res.sendStatus(404);
             }   
@@ -381,17 +376,20 @@ const addThumbnailToArticle = async (req, res) => {
             if(findUser.role !== 101 && findUser.role !== 1001){
                 console.log("Unauthorized!");
                 // Delete updated file
-                if (req.files.files && req.files.files.length > 0) {
-                  req.files.files.forEach(file => fs.unlinkSync(file.path));
+                if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                  req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
                 }
                 return res.sendStatus(403);
             }
 
-            const thumbnail = req.files.files.map(file => ({ url: file.path}) );
+            const thumbnail = req.files.thumbnail.map(file => ({ url: file.path}) );
         
             const existingArticle = await Article.findById(id);
             if (!existingArticle) {
                 console.log('Article not found');
+                if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                    req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+                }
                 return res.sendStatus(404);
             }   
     
@@ -470,7 +468,7 @@ const deleteThumbnailFromArticle = async (req, res) => {
 // Change article to public
 const changeToPublic = async (req, res) => {
     try {
-        const { articleId } = req.params;
+        const { id } = req.params;
         const userId = req.user.id;
 
         const findUser = await User.findById(userId);
@@ -480,10 +478,10 @@ const changeToPublic = async (req, res) => {
             return res.sendStatus(403);
         }
 
-        if(articleId){
+        if(id){
 
             // Read the article you want to change to public
-            const article = await Article.findById(articleId);
+            const article = await Article.findById(id);
 
             // If exist change to public
             if (article) {
@@ -495,7 +493,7 @@ const changeToPublic = async (req, res) => {
                 return res.sendStatus(404);
             }
         }else{
-            console.log("Missing articleId!");
+            console.log("Missing id!");
             return res.sendStatus(400)
         }   
 
@@ -509,7 +507,7 @@ const changeToPublic = async (req, res) => {
 // Change article to private
 const changeToPrivate = async (req, res) => {
     try {
-        const { articleId } = req.params;
+        const { id } = req.params;
         const userId = req.user.id;
 
         const findUser = await User.findById(userId);
@@ -519,10 +517,10 @@ const changeToPrivate = async (req, res) => {
             return res.sendStatus(403);
         }
 
-        if(articleId){
+        if(id){
 
             // Read the article you want to change to public
-            const article = await Article.findById(articleId);
+            const article = await Article.findById(id);
 
             // If exist change to public
             if (article) {
