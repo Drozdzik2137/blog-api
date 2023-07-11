@@ -415,6 +415,83 @@ const deleteThumbnailFromArticle = async (req, res) => {
     }
 }
 
+// Change article to public
+const changeToPublic = async (req, res) => {
+    try {
+        const { articleId } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
+
+        if(articleId){
+
+            // Read the article you want to change to public
+            const article = await Article.findById(articleId);
+
+            // If exist change to public
+            if (article) {
+                article.isPublic = true;
+                await article.save();
+                return res.status(200).json(article);
+            }else{
+                console.log('Article not found');
+                return res.sendStatus(404);
+            }
+        }else{
+            console.log("Missing articleId!");
+            return res.sendStatus(400)
+        }   
+
+    }catch(err){
+        console.log('Error when changing an article to public:', err);
+        return res.status(500).json({ err: 'Failed to change article to public' });
+    }
+}
+
+
+// Change article to private
+const changeToPrivate = async (req, res) => {
+    try {
+        const { articleId } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
+
+        if(articleId){
+
+            // Read the article you want to change to public
+            const article = await Article.findById(articleId);
+
+            // If exist change to public
+            if (article) {
+                article.isPublic = false;
+                await article.save();
+                return res.status(200).json(article);
+            }else{
+                console.log('Article not found');
+                return res.sendStatus(404);
+            }
+        }else{
+            console.log("Missing articleId!");
+            return res.sendStatus(400)
+        }   
+
+    }catch(err){
+        console.log('Error when changing an article to private:', err);
+        return res.status(500).json({ err: 'Failed to change article to private' });
+    }
+}
+
 module.exports = {
     addArticle: addArticle,
     editArticle: editArticle,
