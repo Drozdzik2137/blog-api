@@ -295,7 +295,7 @@ const addImageToArticle = async (req, res) => {
             existingArticle.images.push(...images);
             await existingArticle.save();
         
-            res.status(200).json(existingArticle);
+            res.status(201).json(existingArticle);
         }else{
             if (req.files.image && req.files.image.length > 0) {
                 req.files.image.forEach(file => fs.unlinkSync(file.path));
@@ -344,7 +344,7 @@ const deleteImageFromArticle = async (req, res) => {
                         { $pull: { images: { _id: imageId } } },
                         { new: true }
                     );
-                    res.status(200).json(updatedArticle);
+                    res.status(201).json(updatedArticle);
                 }else{
                     console.log('Image not found');
                     return res.sendStatus(404);
@@ -396,7 +396,7 @@ const addThumbnailToArticle = async (req, res) => {
             existingArticle.thumbnail.push(...thumbnail);
             await existingArticle.save();
         
-            res.status(200).json(existingArticle);
+            res.status(201).json(existingArticle);
         }else{
             if (req.files.thumbnail && req.files.thumbnail.length > 0) {
                 req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
@@ -445,7 +445,7 @@ const deleteThumbnailFromArticle = async (req, res) => {
                         { $pull: { thumbnail: { _id: thumbnailId } } },
                         { new: true }
                     );
-                    res.status(200).json(updatedArticle);
+                    res.status(201).json(updatedArticle);
                 }else{
                     console.log('Thumbnail not found');
                     return res.sendStatus(404);
@@ -487,7 +487,7 @@ const changeToPublic = async (req, res) => {
             if (article) {
                 article.isPublic = true;
                 await article.save();
-                return res.status(200).json(article);
+                return res.status(201).json(article);
             }else{
                 console.log('Article not found');
                 return res.sendStatus(404);
@@ -526,7 +526,7 @@ const changeToPrivate = async (req, res) => {
             if (article) {
                 article.isPublic = false;
                 await article.save();
-                return res.status(200).json(article);
+                return res.status(201).json(article);
             }else{
                 console.log('Article not found');
                 return res.sendStatus(404);
