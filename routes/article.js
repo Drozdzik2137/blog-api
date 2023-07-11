@@ -89,6 +89,6 @@ router.route('/admin/articles').get(secure.authenticateUser, articleController.g
 router.route('/article/:id/public').put(secure.authenticateUser, articleController.changeToPublic);
 
 // Change to private
-router.route('/article/:id/public').put(secure.authenticateUser, articleController.changeToPrivate);
+router.route('/article/:id/private').put(secure.authenticateUser, articleController.changeToPrivate);
 
 module.exports = router;
