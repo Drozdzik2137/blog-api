@@ -131,7 +131,7 @@ const editArticle = async (req, res) => {
     }
 }
 
-// Read all articles
+// Read all public articles
 const getArticles = async (req, res) => {
     try {
         const articles = await Article.find({ isPublic: true }, 'title description thumbnail createdAt').lean();
@@ -142,7 +142,7 @@ const getArticles = async (req, res) => {
     }
 }
 
-// Read single article
+// Read single public article
 const getArticle = async (req, res) => {
     try {
         const { id } = req.params;
@@ -151,6 +151,58 @@ const getArticle = async (req, res) => {
             console.log("Unauthorized!");
             return res.sendStatus(403);
         }
+        if (!article) {
+            console.log('Article not found');
+            return res.sendStatus(404);
+        }
+        res.status(200).json(article);
+    }catch(err){
+        console.log('Error fetching article:', err);
+        return res.status(500).json({ err: 'Failed to fetch article' });
+    }
+}
+
+// Read all public articles (public and private for admin)
+const getArticlesForAdmin = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            // Delete updated file
+            if (req.files && req.files.length > 0) {
+              req.files.forEach(file => fs.unlinkSync(file.path));
+            }
+            return res.sendStatus(403);
+        }
+        const articles = await Article.find('title description thumbnail createdAt').lean();
+        res.status(200).json(articles);
+    }catch(err){
+    console.log('Error fetching articles:', err);
+    return res.status(500).json({ err: 'Failed to fetch articles' });
+    }
+}
+
+// Read single article (public and private for admin)
+const getArticleForAdmin = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            // Delete updated file
+            if (req.files && req.files.length > 0) {
+              req.files.forEach(file => fs.unlinkSync(file.path));
+            }
+            return res.sendStatus(403);
+        }
+
+        const article = await Article.findById(id);
         if (!article) {
             console.log('Article not found');
             return res.sendStatus(404);
@@ -501,5 +553,9 @@ module.exports = {
     addImageToArticle: addImageToArticle,
     deleteImageFromArticle: deleteImageFromArticle,
     addThumbnailToArticle: addThumbnailToArticle,
-    deleteThumbnailFromArticle: deleteThumbnailFromArticle
+    deleteThumbnailFromArticle: deleteThumbnailFromArticle,
+    changeToPublic: changeToPublic,
+    changeToPrivate: changeToPrivate,
+    getArticlesForAdmin: getArticlesForAdmin,
+    getArticleForAdmin: getArticleForAdmin
 }
