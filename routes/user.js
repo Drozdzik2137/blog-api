@@ -7,6 +7,9 @@ const role = require('../middleware/authorizeAdmin');
 // Register a new user
 router.post('/register', UserController.registerUser);
 
+// Activate user account (only accessible by admin)
+router.put('/activate/:userId', secure.authenticateUser , role.authorizeAdmin, UserController.activateUser);
+
 // Deactivate user account (only accessible by admin)
 router.put('/deactivate/:userId', secure.authenticateUser , role.authorizeAdmin, UserController.deactivateUser);
 

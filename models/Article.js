@@ -15,16 +15,29 @@ const ArticleSchema = new mongoose.Schema(
             type: String,
             require: true
         },
+        // main photo or several photos for the carousel
+        thumbnail: [
+            {
+                url: String
+            }
+        ],
         images: [
             {
                 url: String,
-                isMain: Boolean
-
+            }
+        ],
+        links: [
+            {
+                type: String
             }
         ],
         createdAt: {
             type: Date,
             require: true
+        },
+        isPublic:{
+            type: Boolean,
+            default: false
         },
         userId: {
             type: Schema.Types.ObjectId,

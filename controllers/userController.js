@@ -31,6 +31,35 @@ const registerUser = async (req, res) => {
   }
 };
 
+ // Activate user account (only accessible by admin)
+ const activateUser = async (req, res) => {
+  try {
+      const { userId } = req.params;
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const requestingUserId = req.user.id;
+      const requestingUser = await User.findById(requestingUserId)
+
+      // Admins cannot deactivate their account
+      if (requestingUser.role != 1001){
+        return res.status(403).json({ error: 'You cannot do this!' });
+      }
+
+      // Deactivate the user account
+      user.isActive = true;
+      await user.save();
+
+      res.status(200).json({ message: 'User account activated' });
+  } catch (err) {
+      console.error('Error activating user account:', err);
+      res.status(500).json({ error: 'Failed to activate user account' });
+  }
+}
+
  // Deactivate user account (only accessible by admin)
  const deactivateUser = async (req, res) => {
     try {
@@ -40,12 +69,13 @@ const registerUser = async (req, res) => {
         if (!user) {
           return res.status(404).json({ error: 'User not found' });
         }
-  
+
         const requestingUserId = req.user.id;
+        const requestingUser = await User.findById(requestingUserId)
   
-        // Admin cannot deactivate their own account
-        if (user.role === 1001 && requestingUserId === userId) {
-          return res.status(403).json({ error: 'Unauthorized' });
+        // Admins cannot deactivate their account
+        if (user.role == 1001 || requestingUser.role != 1001){
+          return res.status(403).json({ error: 'You cannot do this!' });
         }
   
         // Deactivate the user account
@@ -63,17 +93,22 @@ const changeUserRole =  async (req, res) => {
     try {
         const { userId } = req.params;
         const { role } = req.body;
+
+        if(role == 1001){
+          return res.status(403).json({ error: 'You cannot do this!' });
+        }
   
         const user = await User.findById(userId);
         if (!user) {
           return res.status(404).json({ error: 'User not found' });
         }
-  
+
         const requestingUserId = req.user.id;
+        const requestingUser = await User.findById(requestingUserId)
   
-        // Only admin can change user roles
-        if (user.role !== 1001 && requestingUserId === userId) {
-          return res.status(403).json({ error: 'Unauthorized' });
+        // Only admin can change user roles for others
+        if (user.role == 1001 || requestingUser.role != 1001) {
+          return res.status(403).json({ error: 'You cannot do this!' });
         }
   
         // Update the user role
@@ -89,6 +124,7 @@ const changeUserRole =  async (req, res) => {
 
 module.exports = {
   registerUser,
+  activateUser,
   deactivateUser,
   changeUserRole
 };

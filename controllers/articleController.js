@@ -10,7 +10,7 @@ const deleteFile = (filePath) => {
         console.log(`File ${filePath} deleted successfully`);
       }
     });
-  };
+};
 
 // Add new article
 const addArticle = async (req, res) => {
@@ -22,27 +22,35 @@ const addArticle = async (req, res) => {
 
         if(findUser.role !== 101 && findUser.role !== 1001){
             console.log("Unauthorized!");
-            // Delete updated file
-            if (req.files && req.files.length > 0) {
-              req.files.forEach(file => fs.unlinkSync(file.path));
+            // Delete updated thumbnail
+            if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+            }
+            // Delete updated image
+            if (req.files.image && req.files.image.length > 0) {
+                req.files.image.forEach(file => fs.unlinkSync(file.path));
             }
             return res.sendStatus(403);
         }
 
-        if (!title || !description || !content || !userId || !req.files || req.files.length === 0) {
+        if (!title || !description || !content || !userId || !req.files) {
             console.log("Missing data or photos!");
-            // Delete updated file
-            if (req.files && req.files.length > 0) {
-              req.files.forEach(file => fs.unlinkSync(file.path));
+            // Delete updated thumbnail
+            if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+            }
+            // Delete updated image
+            if (req.files.image && req.files.image.length > 0) {
+                req.files.image.forEach(file => fs.unlinkSync(file.path));
             }
             return res.sendStatus(400);
         }else{
-            const images = req.files ? req.files.map(file => ({ url: file.path, isMain: false })) : [];
+            const images = req.files.image ? req.files.image.map(file => ({ url: file.path })) : [];
+            const thumbnail = req.files.thumbnail ? req.files.thumbnail.map(file => ({ url: file.path })) : [];
+            const links = req.body.link ? req.body.link : [];
             // Set first image as main
-            if (images.length > 0) {
-                images[0].isMain = true;
-            }else{
-                console.log("Missing data - no photos!");
+            if (!thumbnail.length > 0) {
+                console.log("Missing data - no thumbnail!");
                 return res.sendStatus(400);
             }
         
@@ -50,15 +58,13 @@ const addArticle = async (req, res) => {
                 title: title, 
                 description: description, 
                 content: content, 
-                images: images, 
+                thumbnail: thumbnail,
+                images: images,
+                links: links, 
                 createdAt: new Date(), 
                 userId: userId
             });
             
-            // Add articleId to articles array at the user in DB
-            // const updateUser = await User.findByIdAndUpdate(userId,
-            //     {$push: { articles: newArticle._id}}
-            // );
             findUser.articles.push(newArticle._id);
 
             await newArticle.save();
@@ -67,6 +73,14 @@ const addArticle = async (req, res) => {
         }
 
     }catch(err){
+        // Delete updated thumbnail
+        if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+            req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+        }
+        // Delete updated image
+        if (req.files.image && req.files.image.length > 0) {
+            req.files.image.forEach(file => fs.unlinkSync(file.path));
+        }
         console.log('Error adding new article:', err);
         return res.status(500).json({ err: 'Failed to add new article' });
     }
@@ -94,20 +108,21 @@ const editArticle = async (req, res) => {
             return res.sendStatus(400);
 
         }else{
-            if(userId){
+            const links =  req.body.link ? req.body.link : [];
+            if(links.length > 0){
+                const updatedArticle = await Article.findByIdAndUpdate(
+                    articleId,
+                    { title: title, description: description, content: content, links: links, userId: userId },
+                    { new: true }
+                );
+                res.status(201).json(updatedArticle);                    
+            }else{
                 const updatedArticle = await Article.findByIdAndUpdate(
                     articleId,
                     { title: title, description: description, content: content, userId: userId },
                     { new: true }
                 );
-                res.status(201).json(updatedArticle);                
-            }else{
-                const updatedArticle = await Article.findByIdAndUpdate(
-                    articleId,
-                    { title: title, description: description, content: content },
-                    { new: true }
-                );
-                res.status(201).json(updatedArticle);
+                res.status(201).json(updatedArticle);    
             }
         }
     }catch(err){
@@ -116,16 +131,49 @@ const editArticle = async (req, res) => {
     }
 }
 
-// Read all articles
+// Read all public articles
 const getArticles = async (req, res) => {
     try {
-        const articles = await Article.find({}, 'title description images.url').lean();
-        articles.forEach(article => {
-            if (article.images.length > 0) {
-              article.imageUrl = article.images[0].url;
-              delete article.images;
-            }
-        });
+        const articles = await Article.find({ isPublic: true }, 'title description thumbnail createdAt').lean();
+        res.status(200).json(articles);
+    }catch(err){
+        console.log('Error fetching articles:', err);
+        return res.status(500).json({ err: 'Failed to fetch articles' });
+    }
+}
+
+// Read single public article
+const getArticle = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const article = await Article.findById(id);
+        if(!article.isPublic){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
+        if (!article) {
+            console.log('Article not found');
+            return res.sendStatus(404);
+        }
+        res.status(200).json(article);
+    }catch(err){
+        console.log('Error fetching article:', err);
+        return res.status(500).json({ err: 'Failed to fetch article' });
+    }
+}
+
+// Read all public articles (public and private for admin)
+const getArticlesForAdmin = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");            
+            return res.sendStatus(403);
+        }
+        const articles = await Article.find({}, 'title description thumbnail createdAt').lean();
         res.status(200).json(articles);
     }catch(err){
     console.log('Error fetching articles:', err);
@@ -133,10 +181,19 @@ const getArticles = async (req, res) => {
     }
 }
 
-// Read single article
-const getArticle = async (req, res) => {
+// Read single article (public and private for admin)
+const getArticleForAdmin = async (req, res) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
+
         const article = await Article.findById(id);
         if (!article) {
             console.log('Article not found');
@@ -171,12 +228,20 @@ const deleteArtcile = async (req, res) => {
 
         // If exist delete images from an article
         if (article) {
+            // Read array with thumbnail urls
+            const thumbnailUrls = article.thumbnail.map((thumbnail) => thumbnail.url);
+
             // Read array with images urls
             const imageUrls = article.images.map((image) => image.url);
 
             // Delete an image from server
             imageUrls.forEach((imageUrl) => {
                 deleteFile(imageUrl);
+            });
+
+            // Delete an thumbnail from server
+            thumbnailUrls.forEach((thumbnailUrls) => {
+                deleteFile(thumbnailUrls);
             });
 
             // Remove articleId form user articles array
@@ -203,38 +268,37 @@ const addImageToArticle = async (req, res) => {
     try {
         const { id } = req.params;
         
-        if(id && req.files && req.files.length > 0){
+        if(id && req.files.image && req.files.image.length > 0){
             const userId = req.user.id;
             const findUser = await User.findById(userId);
 
             if(findUser.role !== 101 && findUser.role !== 1001){
                 console.log("Unauthorized!");
                 // Delete updated file
-                if (req.files && req.files.length > 0) {
-                  req.files.forEach(file => fs.unlinkSync(file.path));
+                if (req.files.image && req.files.image.length > 0) {
+                  req.files.image.forEach(file => fs.unlinkSync(file.path));
                 }
                 return res.sendStatus(403);
             }
 
-            const images = req.files.map(file => ({ url: file.path, isMain: false }));
+            const images = req.files.image.map(file => ({ url: file.path}) );
         
             const existingArticle = await Article.findById(id);
             if (!existingArticle) {
+                if (req.files.image && req.files.image.length > 0) {
+                    req.files.image.forEach(file => fs.unlinkSync(file.path));
+                }
                 console.log('Article not found');
                 return res.sendStatus(404);
-            }
-        
-            if (existingArticle.images.length === 0) {
-              images[0].isMain = true;
-            }
+            }   
     
             existingArticle.images.push(...images);
             await existingArticle.save();
         
-            res.status(200).json(existingArticle);
+            res.status(201).json(existingArticle);
         }else{
-            if (req.files && req.files.length > 0) {
-                req.files.forEach(file => fs.unlinkSync(file.path));
+            if (req.files.image && req.files.image.length > 0) {
+                req.files.image.forEach(file => fs.unlinkSync(file.path));
             }
             console.log("Missing id or photos!");
             return res.sendStatus(400)
@@ -280,7 +344,7 @@ const deleteImageFromArticle = async (req, res) => {
                         { $pull: { images: { _id: imageId } } },
                         { new: true }
                     );
-                    res.status(200).json(updatedArticle);
+                    res.status(201).json(updatedArticle);
                 }else{
                     console.log('Image not found');
                     return res.sendStatus(404);
@@ -300,6 +364,184 @@ const deleteImageFromArticle = async (req, res) => {
     }
 }
 
+// Add new thumbnail to article
+const addThumbnailToArticle = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if(id && req.files.thumbnail && req.files.thumbnail.length > 0){
+            const userId = req.user.id;
+            const findUser = await User.findById(userId);
+
+            if(findUser.role !== 101 && findUser.role !== 1001){
+                console.log("Unauthorized!");
+                // Delete updated file
+                if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                  req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+                }
+                return res.sendStatus(403);
+            }
+
+            const thumbnail = req.files.thumbnail.map(file => ({ url: file.path}) );
+        
+            const existingArticle = await Article.findById(id);
+            if (!existingArticle) {
+                console.log('Article not found');
+                if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                    req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+                }
+                return res.sendStatus(404);
+            }   
+    
+            existingArticle.thumbnail.push(...thumbnail);
+            await existingArticle.save();
+        
+            res.status(201).json(existingArticle);
+        }else{
+            if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                req.files.thumbnail.forEach(file => fs.unlinkSync(file.path));
+            }
+            console.log("Missing id or photos!");
+            return res.sendStatus(400)
+        }
+    }catch(err){
+        console.log('Error adding thumbnail to article:', err);
+        return res.status(500).json({ err: 'Failed to add thumbnail to article' });
+    }
+}
+
+// Delete thumbnail from an article
+const deleteThumbnailFromArticle = async (req, res) => {
+    try {
+        const { articleId, thumbnailId } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
+
+        if(articleId && thumbnailId){
+
+            // Read the article from which you want to remove an image
+            const article = await Article.findById(articleId);
+
+            // If exist delete images from an article
+            if (article) {
+                let isThumbnailFound = false;
+                // Read array with images urls
+                article.thumbnail.forEach(async (thumbnail) => {
+                    if (thumbnail.id === thumbnailId) {
+                        // Delete the image from the server
+                        deleteFile(thumbnail.url);
+                        isThumbnailFound = true;
+                    }
+                });
+                if (isThumbnailFound) {
+                    const updatedArticle = await Article.findByIdAndUpdate(
+                        articleId,
+                        { $pull: { thumbnail: { _id: thumbnailId } } },
+                        { new: true }
+                    );
+                    res.status(201).json(updatedArticle);
+                }else{
+                    console.log('Thumbnail not found');
+                    return res.sendStatus(404);
+                }
+            }else{
+                console.log('Article not found');
+                return res.sendStatus(404);
+            }
+        }else{
+            console.log("Missing articleId or thumbnailId!");
+            return res.sendStatus(400)
+        }   
+
+    }catch(err){
+        console.log('Error removing thumbnail from article:', err);
+        return res.status(500).json({ err: 'Failed to remove thumbnail from article' });
+    }
+}
+
+// Change article to public
+const changeToPublic = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
+
+        if(id){
+
+            // Read the article you want to change to public
+            const article = await Article.findById(id);
+
+            // If exist change to public
+            if (article) {
+                article.isPublic = true;
+                await article.save();
+                return res.status(201).json(article);
+            }else{
+                console.log('Article not found');
+                return res.sendStatus(404);
+            }
+        }else{
+            console.log("Missing id!");
+            return res.sendStatus(400)
+        }   
+
+    }catch(err){
+        console.log('Error when changing an article to public:', err);
+        return res.status(500).json({ err: 'Failed to change article to public' });
+    }
+}
+
+
+// Change article to private
+const changeToPrivate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        const findUser = await User.findById(userId);
+
+        if(findUser.role !== 101 && findUser.role !== 1001){
+            console.log("Unauthorized!");
+            return res.sendStatus(403);
+        }
+
+        if(id){
+
+            // Read the article you want to change to public
+            const article = await Article.findById(id);
+
+            // If exist change to public
+            if (article) {
+                article.isPublic = false;
+                await article.save();
+                return res.status(201).json(article);
+            }else{
+                console.log('Article not found');
+                return res.sendStatus(404);
+            }
+        }else{
+            console.log("Missing articleId!");
+            return res.sendStatus(400)
+        }   
+
+    }catch(err){
+        console.log('Error when changing an article to private:', err);
+        return res.status(500).json({ err: 'Failed to change article to private' });
+    }
+}
+
 module.exports = {
     addArticle: addArticle,
     editArticle: editArticle,
@@ -307,5 +549,11 @@ module.exports = {
     getArticle: getArticle,
     deleteArtcile: deleteArtcile,
     addImageToArticle: addImageToArticle,
-    deleteImageFromArticle: deleteImageFromArticle
+    deleteImageFromArticle: deleteImageFromArticle,
+    addThumbnailToArticle: addThumbnailToArticle,
+    deleteThumbnailFromArticle: deleteThumbnailFromArticle,
+    changeToPublic: changeToPublic,
+    changeToPrivate: changeToPrivate,
+    getArticlesForAdmin: getArticlesForAdmin,
+    getArticleForAdmin: getArticleForAdmin
 }
