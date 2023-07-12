@@ -365,7 +365,7 @@ This is an API example describing a note API.
     Content-Type: application/json
 
     {
-        "error": "Failed to get user notes",
+        "error": "Missing user ID",
     }
 ```
 
@@ -380,32 +380,26 @@ This is an API example describing a note API.
 ```
 <br>
 
---- 
-
-## Get user Notes [GET]
+## Get single Note [GET]
 
 ### Request
 
-`GET /notes`
+`GET /notes/:noteId`
 
 ### Response
 
-1- GET - Get user Notes - HTTP Response Code: **200**
+1- GET - Get single Note - HTTP Response Code: **200**
 ```javascript
     HTTP/1.1 200
     Content-Type: application/json
 
     {
-        [
-            {
-                "_id": "64ad957a40ccea78f97b3258",
-                "title": "Test Title 2",
-                "content": "Test Content 3",
-                "createdAt": "2023-07-11T17:46:34.547Z",
-                "userId": "64a433c69dd8a9a9f7d876fb",
-                "__v": 0
-            }
-        ]
+        "_id": "64ad957a40ccea78f97b3258",
+        "title": "Test Title 2",
+        "content": "Test Content 3",
+        "createdAt": "2023-07-11T17:46:34.547Z",
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 0
     }
 ```
 
@@ -424,7 +418,7 @@ This is an API example describing a note API.
     Content-Type: application/json
     
     {
-        "error": "Failed to get user notes",
+        "error": "Note not found",
     }
 ```
 
@@ -434,7 +428,166 @@ This is an API example describing a note API.
     Content-Type: application/json
 
     {
-        "error": "Failed to get user notes",
+        "error": "Failed to get note",
+    }
+```
+<br>
+
+## Add new note [POST]
+
+### Request
+
+`POST /notes/new`
+
+### Response
+
+1- POST - Add new note - HTTP Response Code: **201**
+```javascript
+    HTTP/1.1 201
+    Content-Type: application/json
+
+    {
+        "_id": "64ad957a40ccea78f97b3258",
+        "title": "Test Title 2",
+        "content": "Test Content 3",
+        "createdAt": "2023-07-11T17:46:34.547Z",
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 0
+    }
+```
+
+2- POST - Add new note - HTTP Response Code: **401**
+```javascript
+    HTTP/1.1 401 Unauthorized
+```
+
+3- POST - Add new note - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+4- POST - Add new note - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+    Content-Type: application/json
+    
+    {
+        "error": "Missing userId or note data!",
+    }
+```
+
+5- POST - Add new note - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to create note",
+    }
+```
+<br>
+
+## Edit note [PUT]
+
+### Request
+
+`PUT /notes/:noteId`
+
+### Response
+
+1- PUT - Edit note - HTTP Response Code: **201**
+```javascript
+    HTTP/1.1 201
+    Content-Type: application/json
+
+    {
+        "_id": "64ad957a40ccea78f97b3258",
+        "title": "Test Title 2",
+        "content": "Test Content 3",
+        "createdAt": "2023-07-11T17:46:34.547Z",
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 0
+    }
+```
+
+2- PUT - Edit note - HTTP Response Code: **401**
+```javascript
+    HTTP/1.1 401 Unauthorized
+```
+
+3- PUT - Edit note - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+4- PUT - Edit note - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+    Content-Type: application/json
+    
+    {
+        "error": "Missing title or content!",
+    }
+```
+
+5- PUT - Edit note - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to update note",
+    }
+```
+<br>
+
+## Delete note [DELETE]
+
+### Request
+
+`DELETE /notes/:noteId`
+
+### Response
+
+1- DELETE - Delete note - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "_id": "64ad957a40ccea78f97b3258",
+        "title": "Test Title 2",
+        "content": "Test Content 3",
+        "createdAt": "2023-07-11T17:46:34.547Z",
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 0
+    }
+```
+
+2- DELETE - Delete note - HTTP Response Code: **401**
+```javascript
+    HTTP/1.1 401 Unauthorized
+```
+
+3- DELETE - Delete note - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+4- DELETE - Delete note - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+    Content-Type: application/json
+    
+    {
+        "error": "Note not found",
+    }
+```
+
+5- DELETE - Delete note - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to delete note",
     }
 ```
 <br>

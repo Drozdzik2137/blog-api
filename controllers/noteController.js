@@ -38,7 +38,7 @@ const createNote = async (req, res) => {
     const { title, content } = req.body;
     if(!userId || !title || !content){
         console.log('Missing user id or note data!')
-        return res.sendStatus(404);
+        return res.status(404).json({error: "Missing userId or note data!"});
     }
     const newNote = new Note({
       title: title,
@@ -128,7 +128,7 @@ const updateNote = async (req, res) => {
       res.status(200).json(updatedNote);
   }catch(err){
     console.log('Error updating note:', err);
-    res.status(500).json({ error: 'Failed to updating note' });
+    res.status(500).json({ error: 'Failed to update note' });
   }
 };
 
@@ -149,7 +149,7 @@ const deleteNote = async (req, res) => {
   
       if (!findNote) {
         console.log('Note not found');
-        return res.sendStatus(404);
+        return res.status(404).json({error: "Note not found"});
       }
   
       // Check whether the logged-in user is the owner of the note

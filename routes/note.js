@@ -11,7 +11,7 @@ router.route('/new').post(noteController.createNote);
 // Read single note
 router.route('/:noteId').get(noteController.getNote);
 
-// Edytuj notatkę użytkownika
+// Edit user note
 router.route('/:noteId').put(noteController.updateNote);
 
 // Delete single note
