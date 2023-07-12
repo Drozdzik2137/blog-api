@@ -14,7 +14,7 @@ const getUserNotes = async (req, res) => {
 
     if(!userId){
         console.log('Missing user id!')
-        return res.sendStatus(404);
+        return res.status(404).json({ error: 'Missing user ID' });;
     }
     const notes = await Note.find({ userId: userId });
     res.status(200).json(notes);
