@@ -1414,5 +1414,80 @@ This is an API example describing a article API.
         "error": "Failed to change article to private",
     }
 ```
+<br><br>
+
+# Authorization routes  [/auth]
+
+This is an API example describing a auth API.
+
+## Login route [POST]
+
+### Request
+
+`POST /auth/login`
+
+### Response
+
+1- POST - Login route - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        [
+            {
+                "_id": "64ad89872c07169e8060c9f8",
+                "title": "Test Title",
+                "description": "Test Desc",
+                "thumbnail": [
+                    {
+                        "url": "uploads\\thumbnail\\1689094535188.jpg",
+                        "_id": "64ad89872c07169e8060c9f9"
+                    },
+                    {
+                        "url": "uploads\\thumbnail\\1689097073530.jpg",
+                        "_id": "64ad9371f587ff9592ade175"
+                    }
+                ],
+                "createdAt": "2023-07-11T16:55:35.206Z"
+            }
+        ]
+    }
+```
+
+2- POST - Login route - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- POST - Login route - HTTP Response Code: **401**
+```javascript
+    HTTP/1.1 401 Unauthorized
+    Content-Type: application/json
+
+    {
+        "message": "Please enter correct login and password",
+    }
+```
+
+4- POST - Login route - HTTP Response Code: **409**
+```javascript
+    HTTP/1.1 409 Forbidden
+    Content-Type: application/json
+
+    {
+        "message": "Your account has been deactivated",
+    }
+```
+
+5- POST - Login route - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to login",
+    }
+```
 <br>
 
