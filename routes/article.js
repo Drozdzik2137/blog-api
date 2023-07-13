@@ -44,12 +44,18 @@ const fileFilter = function (req, file, cb) {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
+// Get all articles - no need JWT auth
+router.route('/').get(articleController.getArticles);
 
 // Get the article - no need JWT auth
 router.route('/:id').get(articleController.getArticle);
 
-// Get all articles - no need JWT auth
-router.route('/').get(articleController.getArticles);
+// Get all artciles for admin
+router.route('/admin').get(secure.authenticateUser, articleController.getArticlesForAdmin);
+
+// Get the article for admin
+router.route('/admin/:id').get(secure.authenticateUser, articleController.getArticleForAdmin);
+
 
 // Add new article
 router.route('/new').post(secure.authenticateUser, upload.fields([
@@ -86,12 +92,6 @@ router.route('/:id/thumbnail').post(secure.authenticateUser, upload.fields([
 
 // Delete an thumbnail (single thumbnail) from an thumbnail
 router.route('/:articleId/thumbnail/:thumbnailId').delete(secure.authenticateUser, articleController.deleteThumbnailFromArticle);
-
-// Get the article for admin
-router.route('/admin/:id').get(secure.authenticateUser, articleController.getArticleForAdmin);
-
-// Get all artciles for admin
-router.route('/admin').get(secure.authenticateUser, articleController.getArticlesForAdmin);
 
 // Change to public
 router.route('/:id/public').put(secure.authenticateUser, articleController.changeToPublic);

@@ -590,4 +590,829 @@ This is an API example describing a note API.
         "error": "Failed to delete note",
     }
 ```
+<br><br>
+
+# Article collection [/articles]
+
+This is an API example describing a article API.
+
+## Get public Articles [GET]
+
+### Request
+
+`GET /articles`
+
+### Response
+
+1- GET - Get public Articles - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        [
+            {
+                "_id": "64ad89872c07169e8060c9f8",
+                "title": "Test Title",
+                "description": "Test Desc",
+                "thumbnail": [
+                    {
+                        "url": "uploads\\thumbnail\\1689094535188.jpg",
+                        "_id": "64ad89872c07169e8060c9f9"
+                    },
+                    {
+                        "url": "uploads\\thumbnail\\1689097073530.jpg",
+                        "_id": "64ad9371f587ff9592ade175"
+                    }
+                ],
+                "createdAt": "2023-07-11T16:55:35.206Z"
+            }
+        ]
+    }
+```
+
+2- GET - Get public Articles - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to fetch articles",
+    }
+```
 <br>
+
+## Get public Article [GET]
+
+### Request
+
+`GET /articles/:id`
+
+### Response
+
+1- GET - Get public Article - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test 2"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": true,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- GET -  Get public Article - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+3- GET - Get public Article - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to fetch article",
+    }
+```
+<br>
+
+## Get all Articles (only accessible by admin) [GET]
+
+### Request
+
+`GET /articles/admin`
+
+### Response
+
+1- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        [
+            {
+                "_id": "64ad89872c07169e8060c9f8",
+                "title": "Test Title",
+                "description": "Test Desc",
+                "thumbnail": [
+                    {
+                        "url": "uploads\\thumbnail\\1689094535188.jpg",
+                        "_id": "64ad89872c07169e8060c9f9"
+                    },
+                    {
+                        "url": "uploads\\thumbnail\\1689097073530.jpg",
+                        "_id": "64ad9371f587ff9592ade175"
+                    }
+                ],
+                "createdAt": "2023-07-11T16:55:35.206Z"
+            }
+        ]
+    }
+```
+
+2- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+3- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to fetch articles",
+    }
+```
+<br>
+
+## Get single Article (also private - only accessible by admin) [GET]
+
+### Request
+
+`GET /articles/:id`
+
+### Response
+
+1- GET - Get single Article (also private - only accessible by admin) - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test 2"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": false,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+3- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+4- GET - Get public Article - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to fetch article",
+    }
+```
+<br>
+
+## Add new Article (only accessible by admin) [POST]
+
+### Request
+
+`POST /articles/new`
+
+### Response
+
+1- POST - Add new Article (only accessible by admin) - HTTP Response Code: **201**
+```javascript
+    HTTP/1.1 201
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test 2"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": false,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- POST - Add new Article (only accessible by admin) - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- POST - Add new Article (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+4- POST - Add new Article (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+5- POST - Add new Article (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to add new article",
+    }
+```
+<br>
+
+## Edit Article (only accessible by admin) [PUT]
+
+### Request
+
+`PUT /articles/:id`
+
+### Response
+
+1- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **201**
+```javascript
+    HTTP/1.1 201
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": true,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+4- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+5- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to update article",
+    }
+```
+<br>
+
+## Delete Article (only accessible by admin) [DELETE]
+
+### Request
+
+`DELETE /articles/:id`
+
+### Response
+
+1- DELETE - Delete Article (only accessible by admin) - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "message": "Article deleted successfully"
+    }
+```
+2- DELETE - Delete Article (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+3- DELETE - Delete Article (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+4- DELETE - Delete Article (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to update article",
+    }
+```
+<br>
+
+## Add images to article (only accessible by admin) [POST]
+
+### Request
+
+`POST /articles/:id/images`
+
+### Response
+
+1- POST - Add images to article (only accessible by admin) - HTTP Response Code: **201**
+```javascript
+    HTTP/1.1 201
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": true,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- POST - Add images to article (only accessible by admin) - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- POST - Add images to article (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+4- POST - Add images to article (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+5- POST - Add images to article (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to add image to article",
+    }
+```
+<br>
+
+## Delete an image from the Article (only accessible by admin) [DELETE]
+
+### Request
+
+`DELETE /articles/:articleId/images/:imageId`
+
+### Response
+
+1- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": true,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+4- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+5- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to remove image from article",
+    }
+```
+<br>
+
+## Add thumbnail to article (only accessible by admin) [POST]
+
+### Request
+
+`POST /articles/:id/thumbnail`
+
+### Response
+
+1- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **201**
+```javascript
+    HTTP/1.1 201
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": true,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+4- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+5- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to add thumbnail to article",
+    }
+```
+<br>
+
+## Delete an thumbnail from the Article (only accessible by admin) [DELETE]
+
+### Request
+
+`DELETE /articles/:articleId/thumbnail/:thumbnailId`
+
+### Response
+
+1- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": true,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+4- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+5- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to remove thumbnail from article",
+    }
+```
+<br>
+
+## Change article to public (only accessible by admin) [PUT]
+
+### Request
+
+`PUT /articles/:id/public`
+
+### Response
+
+1- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **201**
+```javascript
+    HTTP/1.1 201
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": true,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+4- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+5- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to change article to public",
+    }
+```
+<br>
+
+## Change article to private (only accessible by admin) [PUT]
+
+### Request
+
+`PUT /articles/:id/private`
+
+### Response
+
+1- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **201**
+```javascript
+    HTTP/1.1 201
+    Content-Type: application/json
+
+    {
+        "_id": "64ad89872c07169e8060c9f8",
+        "title": "Test Title",
+        "description": "Test Desc",
+        "content": "Test Content",
+        "thumbnail": [
+            {
+                "url": "uploads\\thumbnail\\1689094535188.jpg",
+                "_id": "64ad89872c07169e8060c9f9"
+            },
+            {
+                "url": "uploads\\thumbnail\\1689097073530.jpg",
+                "_id": "64ad9371f587ff9592ade175"
+            }
+        ],
+        "images": [
+            {
+                "url": "uploads\\gallery\\2023-07-11\\1689094535187.jpg",
+                "_id": "64ad89872c07169e8060c9fa"
+            }
+        ],
+        "links": [
+            "test"
+        ],
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "isPublic": false,
+        "userId": "64a433c69dd8a9a9f7d876fb",
+        "__v": 3
+    }
+```
+
+2- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+4- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **404**
+```javascript
+    HTTP/1.1 404 Not Found
+```
+
+5- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to change article to private",
+    }
+```
+<br>
+
