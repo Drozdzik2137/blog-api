@@ -1434,24 +1434,7 @@ This is an API example describing a auth API.
     Content-Type: application/json
 
     {
-        [
-            {
-                "_id": "64ad89872c07169e8060c9f8",
-                "title": "Test Title",
-                "description": "Test Desc",
-                "thumbnail": [
-                    {
-                        "url": "uploads\\thumbnail\\1689094535188.jpg",
-                        "_id": "64ad89872c07169e8060c9f9"
-                    },
-                    {
-                        "url": "uploads\\thumbnail\\1689097073530.jpg",
-                        "_id": "64ad9371f587ff9592ade175"
-                    }
-                ],
-                "createdAt": "2023-07-11T16:55:35.206Z"
-            }
-        ]
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTQzM2M2OWRkOGE5YTlmN2Q4NzZmYiIsInJvbGUiOjEwMDEsImlhdCI6MTY4OTI4NDA1NSwiZXhwIjoxNjg5Mjg0MDY1fQ.-Laun45AXxGSm_tUFcvs_-l8D7PQETife_j-9HgzKRM"
     }
 ```
 
@@ -1472,7 +1455,7 @@ This is an API example describing a auth API.
 
 4- POST - Login route - HTTP Response Code: **409**
 ```javascript
-    HTTP/1.1 409 Forbidden
+    HTTP/1.1 409 Conflict
     Content-Type: application/json
 
     {
@@ -1490,4 +1473,39 @@ This is an API example describing a auth API.
     }
 ```
 <br>
+
+## Refresh token route [GET]
+
+### Request
+
+`GET /auth/refresh`
+
+### Response
+
+1- GET - Refresh token route - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTQzM2M2OWRkOGE5YTlmN2Q4NzZmYiIsInJvbGUiOjEwMDEsImlhdCI6MTY4OTI4NDAwMiwiZXhwIjoxNjg5Mjg0OTAyfQ.OuqnnieDf0pDROZwUHC60TcUTUw2GqXqJRxm1DAO6Tg"
+    }
+```
+
+2- GET - Refresh token route - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+3- GET - Refresh token route - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to refresh token",
+    }
+```
+<br>
+
 

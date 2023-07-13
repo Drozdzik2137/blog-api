@@ -90,17 +90,17 @@ const checkRefreshToken = async (req, res) => {
                     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
                     return res.sendStatus(403);
                 }
-                const role = Object.values(foundUser.role);
+                const role = foundUser.role;
                 const accessToken = jwt.sign(
                     {
                         "id": decoded.id,
-                        "roles": role
+                        "role": role  
                     },
                     process.env.ACCESS_TOKEN_SECRET,
                     { expiresIn: '15m' }
                 );
                 // res.json({ roles, accessToken })
-                res.json({ accessToken })
+                res.status(200).json({ accessToken })
             }
         );
     }catch(err){
