@@ -82,7 +82,7 @@ const addArticle = async (req, res) => {
             req.files.image.forEach(file => fs.unlinkSync(file.path));
         }
         console.log('Error adding new article:', err);
-        return res.status(500).json({ err: 'Failed to add new article' });
+        return res.status(500).json({ error: 'Failed to add new article' });
     }
 }
 
@@ -106,9 +106,16 @@ const editArticle = async (req, res) => {
         if(!title || !description || !content){
             console.log("Missing data!");
             return res.sendStatus(400);
-
         }else{
             const links =  req.body.link ? req.body.link : [];
+
+            const findArticle = await Article.findById(articleId);
+
+            if(!findArticle){
+                console.log("Article not exist!");
+                return res.sendStatus(404);
+            }
+
             if(links.length > 0){
                 const updatedArticle = await Article.findByIdAndUpdate(
                     articleId,
@@ -127,7 +134,7 @@ const editArticle = async (req, res) => {
         }
     }catch(err){
         console.log('Error updating article:', err);
-        return res.status(500).json({ err: 'Failed to update article' });
+        return res.status(500).json({ error: 'Failed to update article' });
     }
 }
 
@@ -138,7 +145,7 @@ const getArticles = async (req, res) => {
         res.status(200).json(articles);
     }catch(err){
         console.log('Error fetching articles:', err);
-        return res.status(500).json({ err: 'Failed to fetch articles' });
+        return res.status(500).json({ error: 'Failed to fetch articles' });
     }
 }
 
@@ -158,7 +165,7 @@ const getArticle = async (req, res) => {
         res.status(200).json(article);
     }catch(err){
         console.log('Error fetching article:', err);
-        return res.status(500).json({ err: 'Failed to fetch article' });
+        return res.status(500).json({ error: 'Failed to fetch article' });
     }
 }
 
@@ -176,15 +183,14 @@ const getArticlesForAdmin = async (req, res) => {
         const articles = await Article.find({}, 'title description thumbnail createdAt').lean();
         res.status(200).json(articles);
     }catch(err){
-    console.log('Error fetching articles:', err);
-    return res.status(500).json({ err: 'Failed to fetch articles' });
+        console.log('Error fetching articles:', err);
+        return res.status(500).json({ error: 'Failed to fetch articles' });
     }
 }
 
 // Read single article (public and private for admin)
 const getArticleForAdmin = async (req, res) => {
     try {
-        const { id } = req.params;
         const userId = req.user.id;
 
         const findUser = await User.findById(userId);
@@ -194,6 +200,8 @@ const getArticleForAdmin = async (req, res) => {
             return res.sendStatus(403);
         }
 
+        const { id } = req.params;
+
         const article = await Article.findById(id);
         if (!article) {
             console.log('Article not found');
@@ -202,7 +210,7 @@ const getArticleForAdmin = async (req, res) => {
         res.status(200).json(article);
     }catch(err){
         console.log('Error fetching article:', err);
-        return res.status(500).json({ err: 'Failed to fetch article' });
+        return res.status(500).json({ error: 'Failed to fetch article' });
     }
 }
 
@@ -255,11 +263,9 @@ const deleteArtcile = async (req, res) => {
             console.log('Article not found');
             return res.sendStatus(404);
         }
-
-
     }catch(err){
         console.log('Error deleting article:', err);
-        return res.status(500).json({ err: 'Failed to delete article' });
+        return res.status(500).json({ error: 'Failed to delete article' });
     }
 }
 
@@ -305,7 +311,7 @@ const addImageToArticle = async (req, res) => {
         }
     }catch(err){
         console.log('Error adding image to article:', err);
-        return res.status(500).json({ err: 'Failed to add image to article' });
+        return res.status(500).json({ error: 'Failed to add image to article' });
     }
 }
 
@@ -360,7 +366,7 @@ const deleteImageFromArticle = async (req, res) => {
 
     }catch(err){
         console.log('Error removing image from article:', err);
-        return res.status(500).json({ err: 'Failed to remove image from article' });
+        return res.status(500).json({ error: 'Failed to remove image from article' });
     }
 }
 
@@ -406,7 +412,7 @@ const addThumbnailToArticle = async (req, res) => {
         }
     }catch(err){
         console.log('Error adding thumbnail to article:', err);
-        return res.status(500).json({ err: 'Failed to add thumbnail to article' });
+        return res.status(500).json({ error: 'Failed to add thumbnail to article' });
     }
 }
 
@@ -461,7 +467,7 @@ const deleteThumbnailFromArticle = async (req, res) => {
 
     }catch(err){
         console.log('Error removing thumbnail from article:', err);
-        return res.status(500).json({ err: 'Failed to remove thumbnail from article' });
+        return res.status(500).json({ error: 'Failed to remove thumbnail from article' });
     }
 }
 
@@ -499,7 +505,7 @@ const changeToPublic = async (req, res) => {
 
     }catch(err){
         console.log('Error when changing an article to public:', err);
-        return res.status(500).json({ err: 'Failed to change article to public' });
+        return res.status(500).json({ error: 'Failed to change article to public' });
     }
 }
 
@@ -538,7 +544,7 @@ const changeToPrivate = async (req, res) => {
 
     }catch(err){
         console.log('Error when changing an article to private:', err);
-        return res.status(500).json({ err: 'Failed to change article to private' });
+        return res.status(500).json({ error: 'Failed to change article to private' });
     }
 }
 

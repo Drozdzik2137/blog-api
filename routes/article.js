@@ -44,15 +44,21 @@ const fileFilter = function (req, file, cb) {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
+// Get all articles - no need JWT auth
+router.route('/').get(articleController.getArticles);
 
 // Get the article - no need JWT auth
-router.route('/article/:id').get(articleController.getArticle);
+router.route('/:id').get(articleController.getArticle);
 
-// Get all articles - no need JWT auth
-router.route('/articles').get(articleController.getArticles);
+// Get all artciles for admin
+router.route('/admin').get(secure.authenticateUser, articleController.getArticlesForAdmin);
+
+// Get the article for admin
+router.route('/admin/:id').get(secure.authenticateUser, articleController.getArticleForAdmin);
+
 
 // Add new article
-router.route('/article').post(secure.authenticateUser, upload.fields([
+router.route('/new').post(secure.authenticateUser, upload.fields([
   {
     name: 'image'
   },
@@ -62,41 +68,35 @@ router.route('/article').post(secure.authenticateUser, upload.fields([
 ]), articleController.addArticle);
 
 // Edit an article
-router.route('/article/:id').put(secure.authenticateUser, articleController.editArticle);
+router.route('/:id').put(secure.authenticateUser, articleController.editArticle);
 
 // Delete an article
-router.route('/article/:id').delete(secure.authenticateUser, articleController.deleteArtcile);
+router.route('/:id').delete(secure.authenticateUser, articleController.deleteArtcile);
 
 // Add images to article
-router.route('/article/:id/images').post(secure.authenticateUser, upload.fields([
+router.route('/:id/images').post(secure.authenticateUser, upload.fields([
   {
     name: 'image'
   }
 ]), articleController.addImageToArticle);
 
 // Delete an image (single image) from an article
-router.route('/article/:articleId/images/:imageId').delete(secure.authenticateUser, articleController.deleteImageFromArticle);
+router.route('/:articleId/images/:imageId').delete(secure.authenticateUser, articleController.deleteImageFromArticle);
 
 // Add thumbnail to article
-router.route('/article/:id/thumbnail').post(secure.authenticateUser, upload.fields([
+router.route('/:id/thumbnail').post(secure.authenticateUser, upload.fields([
   {
     name: 'thumbnail'
   }
 ]), articleController.addThumbnailToArticle);
 
 // Delete an thumbnail (single thumbnail) from an thumbnail
-router.route('/article/:articleId/thumbnail/:thumbnailId').delete(secure.authenticateUser, articleController.deleteThumbnailFromArticle);
-
-// Get the article for admin
-router.route('/admin/article/:id').get(secure.authenticateUser, articleController.getArticleForAdmin);
-
-// Get all artciles for admin
-router.route('/admin/articles').get(secure.authenticateUser, articleController.getArticlesForAdmin);
+router.route('/:articleId/thumbnail/:thumbnailId').delete(secure.authenticateUser, articleController.deleteThumbnailFromArticle);
 
 // Change to public
-router.route('/article/:id/public').put(secure.authenticateUser, articleController.changeToPublic);
+router.route('/:id/public').put(secure.authenticateUser, articleController.changeToPublic);
 
 // Change to private
-router.route('/article/:id/private').put(secure.authenticateUser, articleController.changeToPrivate);
+router.route('/:id/private').put(secure.authenticateUser, articleController.changeToPrivate);
 
 module.exports = router;
