@@ -1,4 +1,4 @@
-# Blog API
+# Blog API v1.0
 
 This is an API example describing a blog API.
 
