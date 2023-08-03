@@ -33,7 +33,7 @@ const userLogin = async (req, res) => {
                             "role": role       
                         },
                         accessSecret,
-                        {expiresIn: '10s'}
+                        {expiresIn: '1d'}
                     );
             
                     const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
@@ -43,7 +43,7 @@ const userLogin = async (req, res) => {
                             "id": id
                         },
                         refreshSecret,
-                        {expiresIn: '1d'}
+                        {expiresIn: '30d'}
                     );
             
                     // Saving a refresh token in the database to the user
@@ -97,7 +97,7 @@ const checkRefreshToken = async (req, res) => {
                         "role": role  
                     },
                     process.env.ACCESS_TOKEN_SECRET,
-                    { expiresIn: '15m' }
+                    { expiresIn: '1d' }
                 );
                 // res.json({ roles, accessToken })
                 res.status(200).json({ accessToken })
