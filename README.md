@@ -23,9 +23,150 @@ This is an API example describing a blog API.
 
  <br><br>
 
+ 
+# Authorization routes  [/auth]
+
+This is an API example describing a auth API.
+
+## Login route [POST]
+
+### Request
+
+`POST /auth/login`
+
+### Response
+
+1- POST - Login route - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTQzM2M2OWRkOGE5YTlmN2Q4NzZmYiIsInJvbGUiOjEwMDEsImlhdCI6MTY4OTI4NDA1NSwiZXhwIjoxNjg5Mjg0MDY1fQ.-Laun45AXxGSm_tUFcvs_-l8D7PQETife_j-9HgzKRM"
+    }
+```
+
+2- POST - Login route - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+```
+
+3- POST - Login route - HTTP Response Code: **401**
+```javascript
+    HTTP/1.1 401 Unauthorized
+    Content-Type: application/json
+
+    {
+        "message": "Please enter correct login and password",
+    }
+```
+
+4- POST - Login route - HTTP Response Code: **409**
+```javascript
+    HTTP/1.1 409 Conflict
+    Content-Type: application/json
+
+    {
+        "message": "Your account has been deactivated",
+    }
+```
+
+5- POST - Login route - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to login",
+    }
+```
+<br>
+
+## Refresh token route [GET]
+
+### Request
+
+`GET /auth/refresh`
+
+### Response
+
+1- GET - Refresh token route - HTTP Response Code: **200**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.                       eyJpZCI6IjY0YTQzM2M2OWRkOGE5YTlmN2Q4NzZmYiIsInJvbGUiOjEwMDEsImlhdCI6MTY4OTI4NDAwMiwiZXhwIjoxNjg5Mjg0OTAyfQ.OuqnnieDf0pDROZwUHC60TcUTUw2GqXqJRxm1DAO6Tg"
+    }
+```
+
+2- GET - Refresh token route - HTTP Response Code: **403**
+```javascript
+    HTTP/1.1 403 Forbidden
+```
+
+3- GET - Refresh token route - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to refresh token",
+    }
+```
+<br><br>
+
+
 # User collection [/users]
 
 This is an API example describing a user API.
+
+## Register new User [POST]
+
+### Request
+
+`POST /users/register`
+
+1- POST - Register route - HTTP Response Code: **201**
+```javascript
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "message": "User registered successfully"
+    }
+```
+
+2- POST - Register route - HTTP Response Code: **400**
+```javascript
+    HTTP/1.1 400 Bad Request
+    Content-Type: application/json
+
+    {
+        "message": "Please provide all required information",
+    }
+```
+
+3- POST - Register route - HTTP Response Code: **409**
+```javascript
+    HTTP/1.1 409 Conflict
+    Content-Type: application/json
+
+    {
+        "message": "User with this e-mail address already exists",
+    }
+```
+
+4- POST - Register route - HTTP Response Code: **500**
+```javascript
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "An error occurred during user registration",
+    }
+```
+<br>
 
 ## Get single User [GET]
 
@@ -1415,97 +1556,3 @@ This is an API example describing a article API.
     }
 ```
 <br><br>
-
-# Authorization routes  [/auth]
-
-This is an API example describing a auth API.
-
-## Login route [POST]
-
-### Request
-
-`POST /auth/login`
-
-### Response
-
-1- POST - Login route - HTTP Response Code: **200**
-```javascript
-    HTTP/1.1 200
-    Content-Type: application/json
-
-    {
-        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTQzM2M2OWRkOGE5YTlmN2Q4NzZmYiIsInJvbGUiOjEwMDEsImlhdCI6MTY4OTI4NDA1NSwiZXhwIjoxNjg5Mjg0MDY1fQ.-Laun45AXxGSm_tUFcvs_-l8D7PQETife_j-9HgzKRM"
-    }
-```
-
-2- POST - Login route - HTTP Response Code: **400**
-```javascript
-    HTTP/1.1 400 Bad Request
-```
-
-3- POST - Login route - HTTP Response Code: **401**
-```javascript
-    HTTP/1.1 401 Unauthorized
-    Content-Type: application/json
-
-    {
-        "message": "Please enter correct login and password",
-    }
-```
-
-4- POST - Login route - HTTP Response Code: **409**
-```javascript
-    HTTP/1.1 409 Conflict
-    Content-Type: application/json
-
-    {
-        "message": "Your account has been deactivated",
-    }
-```
-
-5- POST - Login route - HTTP Response Code: **500**
-```javascript
-    HTTP/1.1 500
-    Content-Type: application/json
-
-    {
-        "error": "Failed to login",
-    }
-```
-<br>
-
-## Refresh token route [GET]
-
-### Request
-
-`GET /auth/refresh`
-
-### Response
-
-1- GET - Refresh token route - HTTP Response Code: **200**
-```javascript
-    HTTP/1.1 200
-    Content-Type: application/json
-
-    {
-        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTQzM2M2OWRkOGE5YTlmN2Q4NzZmYiIsInJvbGUiOjEwMDEsImlhdCI6MTY4OTI4NDAwMiwiZXhwIjoxNjg5Mjg0OTAyfQ.OuqnnieDf0pDROZwUHC60TcUTUw2GqXqJRxm1DAO6Tg"
-    }
-```
-
-2- GET - Refresh token route - HTTP Response Code: **403**
-```javascript
-    HTTP/1.1 403 Forbidden
-```
-
-3- GET - Refresh token route - HTTP Response Code: **500**
-```javascript
-    HTTP/1.1 500
-    Content-Type: application/json
-
-    {
-        "error": "Failed to refresh token",
-    }
-```
-<br>
-
-
