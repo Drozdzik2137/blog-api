@@ -34,10 +34,17 @@ This is an API example describing a auth API.
 
 `POST /auth/login`
 
+### Body
+```json
+    {
+        "message": "Please enter correct login and password",
+    }
+```
+
 ### Response
 
 1- POST - Login route - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -47,12 +54,12 @@ This is an API example describing a auth API.
 ```
 
 2- POST - Login route - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
 ```
 
 3- POST - Login route - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
     Content-Type: application/json
 
@@ -62,7 +69,7 @@ This is an API example describing a auth API.
 ```
 
 4- POST - Login route - HTTP Response Code: **409**
-```javascript
+```json
     HTTP/1.1 409 Conflict
     Content-Type: application/json
 
@@ -72,7 +79,7 @@ This is an API example describing a auth API.
 ```
 
 5- POST - Login route - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -91,7 +98,7 @@ This is an API example describing a auth API.
 ### Response
 
 1- GET - Refresh token route - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -101,12 +108,12 @@ This is an API example describing a auth API.
 ```
 
 2- GET - Refresh token route - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 3- GET - Refresh token route - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -128,7 +135,7 @@ This is an API example describing a user API.
 `POST /users/register`
 
 1- POST - Register route - HTTP Response Code: **201**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -138,7 +145,7 @@ This is an API example describing a user API.
 ```
 
 2- POST - Register route - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
     Content-Type: application/json
 
@@ -148,7 +155,7 @@ This is an API example describing a user API.
 ```
 
 3- POST - Register route - HTTP Response Code: **409**
-```javascript
+```json
     HTTP/1.1 409 Conflict
     Content-Type: application/json
 
@@ -158,7 +165,7 @@ This is an API example describing a user API.
 ```
 
 4- POST - Register route - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -177,7 +184,7 @@ This is an API example describing a user API.
 ### Response
 
 1- GET - Get single user - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -201,16 +208,16 @@ This is an API example describing a user API.
 ```
 
 2- GET - Get single user - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- GET - Get single user - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 4- GET - Get single user - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404
     Content-Type: application/json
 
@@ -220,7 +227,7 @@ This is an API example describing a user API.
 ```
 
 5- GET - Get single user - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -239,7 +246,7 @@ This is an API example describing a user API.
 ### Response
 
 1- GET - Get all Users - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -279,12 +286,12 @@ This is an API example describing a user API.
 ```
 
 2- GET - Get all Users - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- GET - Get all Users - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 
     {
@@ -294,7 +301,7 @@ This is an API example describing a user API.
 ```
 
 4- GET - Get all Users - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -313,7 +320,7 @@ This is an API example describing a user API.
 ### Response
 
 1- PUT - Activate User account - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -323,12 +330,12 @@ This is an API example describing a user API.
 ```
 
 2- GET - Get single user - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- GET - Get single user - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
     Content-Type: application/json
     {
@@ -336,7 +343,7 @@ This is an API example describing a user API.
     }
 ```
 4- GET - Get single user - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404
     Content-Type: application/json
 
@@ -346,7 +353,7 @@ This is an API example describing a user API.
 ```
 
 5- GET - Get single user - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -365,7 +372,7 @@ This is an API example describing a user API.
 ### Response
 
 1- PUT - Activate User account - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -375,12 +382,12 @@ This is an API example describing a user API.
 ```
 
 2- GET - Get single user - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- GET - Get single user - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
     Content-Type: application/json
     {
@@ -388,7 +395,7 @@ This is an API example describing a user API.
     }
 ```
 4- GET - Get single user - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404
     Content-Type: application/json
 
@@ -398,7 +405,7 @@ This is an API example describing a user API.
 ```
 
 5- GET - Get single user - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -417,7 +424,7 @@ This is an API example describing a user API.
 ### Response
 
 1- PUT - Change user role - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -427,12 +434,12 @@ This is an API example describing a user API.
 ```
 
 2- GET - Change user role - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- GET - Change user role - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
     Content-Type: application/json
     {
@@ -440,7 +447,7 @@ This is an API example describing a user API.
     }
 ```
 4- GET - Change user role - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404
     Content-Type: application/json
 
@@ -450,7 +457,7 @@ This is an API example describing a user API.
 ```
 
 5- GET - Change user role - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -473,7 +480,7 @@ This is an API example describing a note API.
 ### Response
 
 1- GET - Get user Notes - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -492,16 +499,16 @@ This is an API example describing a note API.
 ```
 
 2- GET - Get user Notes - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- GET - Get user Notes - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 4- GET - Get user Notes - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
     Content-Type: application/json
 
@@ -511,7 +518,7 @@ This is an API example describing a note API.
 ```
 
 5- GET - Get user Notes - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -530,7 +537,7 @@ This is an API example describing a note API.
 ### Response
 
 1- GET - Get single Note - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -545,16 +552,16 @@ This is an API example describing a note API.
 ```
 
 2- GET - Get user Notes - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- GET - Get user Notes - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 4- GET - Get user Notes - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
     Content-Type: application/json
     
@@ -564,7 +571,7 @@ This is an API example describing a note API.
 ```
 
 5- GET - Get user Notes - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -583,7 +590,7 @@ This is an API example describing a note API.
 ### Response
 
 1- POST - Add new note - HTTP Response Code: **201**
-```javascript
+```json
     HTTP/1.1 201
     Content-Type: application/json
 
@@ -598,16 +605,16 @@ This is an API example describing a note API.
 ```
 
 2- POST - Add new note - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- POST - Add new note - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 4- POST - Add new note - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
     Content-Type: application/json
     
@@ -617,7 +624,7 @@ This is an API example describing a note API.
 ```
 
 5- POST - Add new note - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -636,7 +643,7 @@ This is an API example describing a note API.
 ### Response
 
 1- PUT - Edit note - HTTP Response Code: **201**
-```javascript
+```json
     HTTP/1.1 201
     Content-Type: application/json
 
@@ -651,16 +658,16 @@ This is an API example describing a note API.
 ```
 
 2- PUT - Edit note - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- PUT - Edit note - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 4- PUT - Edit note - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
     Content-Type: application/json
     
@@ -670,7 +677,7 @@ This is an API example describing a note API.
 ```
 
 5- PUT - Edit note - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -689,7 +696,7 @@ This is an API example describing a note API.
 ### Response
 
 1- DELETE - Delete note - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -704,16 +711,16 @@ This is an API example describing a note API.
 ```
 
 2- DELETE - Delete note - HTTP Response Code: **401**
-```javascript
+```json
     HTTP/1.1 401 Unauthorized
 ```
 
 3- DELETE - Delete note - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 4- DELETE - Delete note - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
     Content-Type: application/json
     
@@ -723,7 +730,7 @@ This is an API example describing a note API.
 ```
 
 5- DELETE - Delete note - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -746,7 +753,7 @@ This is an API example describing a article API.
 ### Response
 
 1- GET - Get public Articles - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -773,7 +780,7 @@ This is an API example describing a article API.
 ```
 
 2- GET - Get public Articles - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -792,7 +799,7 @@ This is an API example describing a article API.
 ### Response
 
 1- GET - Get public Article - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -828,12 +835,12 @@ This is an API example describing a article API.
 ```
 
 2- GET -  Get public Article - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 3- GET - Get public Article - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -852,7 +859,7 @@ This is an API example describing a article API.
 ### Response
 
 1- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -879,12 +886,12 @@ This is an API example describing a article API.
 ```
 
 2- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 3- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -903,7 +910,7 @@ This is an API example describing a article API.
 ### Response
 
 1- GET - Get single Article (also private - only accessible by admin) - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -939,17 +946,17 @@ This is an API example describing a article API.
 ```
 
 2- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 3- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 4- GET - Get public Article - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -968,7 +975,7 @@ This is an API example describing a article API.
 ### Response
 
 1- POST - Add new Article (only accessible by admin) - HTTP Response Code: **201**
-```javascript
+```json
     HTTP/1.1 201
     Content-Type: application/json
 
@@ -1004,22 +1011,22 @@ This is an API example describing a article API.
 ```
 
 2- POST - Add new Article (only accessible by admin) - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
 ```
 
 3- POST - Add new Article (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 4- POST - Add new Article (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 5- POST - Add new Article (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -1038,7 +1045,7 @@ This is an API example describing a article API.
 ### Response
 
 1- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **201**
-```javascript
+```json
     HTTP/1.1 201
     Content-Type: application/json
 
@@ -1074,22 +1081,22 @@ This is an API example describing a article API.
 ```
 
 2- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
 ```
 
 3- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 4- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 5- PUT - Edit Article (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -1108,7 +1115,7 @@ This is an API example describing a article API.
 ### Response
 
 1- DELETE - Delete Article (only accessible by admin) - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -1117,17 +1124,17 @@ This is an API example describing a article API.
     }
 ```
 2- DELETE - Delete Article (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 3- DELETE - Delete Article (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 4- DELETE - Delete Article (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -1146,7 +1153,7 @@ This is an API example describing a article API.
 ### Response
 
 1- POST - Add images to article (only accessible by admin) - HTTP Response Code: **201**
-```javascript
+```json
     HTTP/1.1 201
     Content-Type: application/json
 
@@ -1182,22 +1189,22 @@ This is an API example describing a article API.
 ```
 
 2- POST - Add images to article (only accessible by admin) - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
 ```
 
 3- POST - Add images to article (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 4- POST - Add images to article (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 5- POST - Add images to article (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -1216,7 +1223,7 @@ This is an API example describing a article API.
 ### Response
 
 1- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -1252,22 +1259,22 @@ This is an API example describing a article API.
 ```
 
 2- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
 ```
 
 3- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 4- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 5- DELETE - Delete an image from the Article (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -1286,7 +1293,7 @@ This is an API example describing a article API.
 ### Response
 
 1- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **201**
-```javascript
+```json
     HTTP/1.1 201
     Content-Type: application/json
 
@@ -1322,22 +1329,22 @@ This is an API example describing a article API.
 ```
 
 2- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
 ```
 
 3- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 4- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 5- POST - Add thumbnail to article (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -1356,7 +1363,7 @@ This is an API example describing a article API.
 ### Response
 
 1- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **200**
-```javascript
+```json
     HTTP/1.1 200
     Content-Type: application/json
 
@@ -1392,22 +1399,22 @@ This is an API example describing a article API.
 ```
 
 2- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
 ```
 
 3- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 4- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 5- DELETE - Delete an thumbnail from the Article (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -1426,7 +1433,7 @@ This is an API example describing a article API.
 ### Response
 
 1- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **201**
-```javascript
+```json
     HTTP/1.1 201
     Content-Type: application/json
 
@@ -1462,22 +1469,22 @@ This is an API example describing a article API.
 ```
 
 2- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
 ```
 
 3- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 4- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 5- PUT - Change article to public (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
@@ -1496,7 +1503,7 @@ This is an API example describing a article API.
 ### Response
 
 1- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **201**
-```javascript
+```json
     HTTP/1.1 201
     Content-Type: application/json
 
@@ -1532,22 +1539,22 @@ This is an API example describing a article API.
 ```
 
 2- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **400**
-```javascript
+```json
     HTTP/1.1 400 Bad Request
 ```
 
 3- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **403**
-```javascript
+```json
     HTTP/1.1 403 Forbidden
 ```
 
 4- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **404**
-```javascript
+```json
     HTTP/1.1 404 Not Found
 ```
 
 5- PUT - Change article to private (only accessible by admin) - HTTP Response Code: **500**
-```javascript
+```json
     HTTP/1.1 500
     Content-Type: application/json
 
