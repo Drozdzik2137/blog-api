@@ -5,7 +5,7 @@ const secure = require('../middleware/authMiddleware');
 const role = require('../middleware/authorizeAdmin');
 
 // Register a new user - path initially inactive 
-// router.post('/register', UserController.registerUser);
+router.post('/register', UserController.registerUser);
 
 // Get all users data (only accessible by admin)
 router.get('/all', secure.authenticateUser, role.authorizeAdmin, UserController.getAllUsers);
