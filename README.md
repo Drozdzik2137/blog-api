@@ -35,9 +35,13 @@ This is an API example describing a auth API.
 `POST /auth/login`
 
 ### Body
+
+Example request body with required parameters
+
 ```json
     {
-        "message": "Please enter correct login and password",
+        "email": "email",
+        "password": "password",
     }
 ```
 
@@ -95,6 +99,10 @@ This is an API example describing a auth API.
 
 `GET /auth/refresh`
 
+### Requirements
+
+RefreshToken in cookies
+
 ### Response
 
 1- GET - Refresh token route - HTTP Response Code: **200**
@@ -133,6 +141,21 @@ This is an API example describing a user API.
 ### Request
 
 `POST /users/register`
+
+### Body
+
+Example request body with required parameters
+
+```json
+    {
+        "firstName": "firstName",        
+        "lastName": "lastName",
+        "email": "email",
+        "password": "password",
+    }
+```
+
+### Response
 
 1- POST - Register route - HTTP Response Code: **201**
 ```json
@@ -421,6 +444,16 @@ This is an API example describing a user API.
 
 `PUT /users/change-role/:userId`
 
+### Body
+
+Example request body with role (1 - user, 101 - moderator)
+
+```json
+    {
+        "role": 101,
+    }
+```
+
 ### Response
 
 1- PUT - Change user role - HTTP Response Code: **200**
@@ -587,6 +620,17 @@ This is an API example describing a note API.
 
 `POST /notes/new`
 
+### Body
+
+Example request body with required parameters
+
+```json
+    {
+        "title": "title",        
+        "content": "content",
+    }
+```
+
 ### Response
 
 1- POST - Add new note - HTTP Response Code: **201**
@@ -639,6 +683,17 @@ This is an API example describing a note API.
 ### Request
 
 `PUT /notes/:noteId`
+
+### Body
+
+Example request body with required parameters
+
+```json
+    {
+        "title": "title",        
+        "content": "content",
+    }
+```
 
 ### Response
 
@@ -972,6 +1027,49 @@ This is an API example describing a article API.
 
 `POST /articles/new`
 
+### Header
+
+```json
+    "Content-Type": "multipart/form-data; boundary=<calculated when request is sent>"
+```
+
+### Body
+
+Example request body with required parameters
+
+```json
+    {
+        "title": "title",     
+        "description": "description",   
+        "content": "content",
+    }
+```
+
+Optional parameters
+
+```json
+    {
+        "links": [
+            "link",
+            "link2"
+        ]     
+    }
+```
+
+### Files
+
+Required files
+
+```
+    "thumbnail": file
+```
+
+Optional files
+```
+    "images": file
+```
+
+
 ### Response
 
 1- POST - Add new Article (only accessible by admin) - HTTP Response Code: **201**
@@ -1041,6 +1139,29 @@ This is an API example describing a article API.
 ### Request
 
 `PUT /articles/:id`
+
+### Body
+
+Example request body with required parameters
+
+```json
+    {
+        "title": "title",     
+        "description": "description",   
+        "content": "content",
+    }
+```
+
+Optional parameters
+
+```json
+    {
+        "links": [
+            "link",
+            "link2"
+        ]     
+    }
+```
 
 ### Response
 
@@ -1149,6 +1270,14 @@ This is an API example describing a article API.
 ### Request
 
 `POST /articles/:id/images`
+
+### Files
+
+Required files
+
+```
+    "images": file
+```
 
 ### Response
 
@@ -1289,6 +1418,14 @@ This is an API example describing a article API.
 ### Request
 
 `POST /articles/:id/thumbnail`
+
+### Files
+
+Required files
+
+```
+    "thumbnail": file
+```
 
 ### Response
 
