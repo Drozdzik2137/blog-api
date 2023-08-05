@@ -180,6 +180,7 @@ const getArticlesForAdmin = async (req, res) => {
             console.log("Unauthorized!");            
             return res.sendStatus(403);
         }
+        
         const articles = await Article.find({}, 'title description thumbnail createdAt').lean();
         res.status(200).json(articles);
     }catch(err){
