@@ -352,12 +352,12 @@ Example request body with required parameters
     }
 ```
 
-2- GET - Get single user - HTTP Response Code: **401**
+2- PUT - Activate User account - HTTP Response Code: **401**
 ```json
     HTTP/1.1 401 Unauthorized
 ```
 
-3- GET - Get single user - HTTP Response Code: **403**
+3- PUT - Activate User account - HTTP Response Code: **403**
 ```json
     HTTP/1.1 403 Forbidden
     Content-Type: application/json
@@ -365,7 +365,7 @@ Example request body with required parameters
         "error": "You cannot do this!",
     }
 ```
-4- GET - Get single user - HTTP Response Code: **404**
+4- PUT - Activate User account - HTTP Response Code: **404**
 ```json
     HTTP/1.1 404
     Content-Type: application/json
@@ -375,7 +375,7 @@ Example request body with required parameters
     }
 ```
 
-5- GET - Get single user - HTTP Response Code: **500**
+5- PUT - Activate User account - HTTP Response Code: **500**
 ```json
     HTTP/1.1 500
     Content-Type: application/json
@@ -394,7 +394,7 @@ Example request body with required parameters
 
 ### Response
 
-1- PUT - Activate User account - HTTP Response Code: **200**
+1- PUT - Deactivate User account - HTTP Response Code: **200**
 ```json
     HTTP/1.1 200
     Content-Type: application/json
@@ -404,12 +404,12 @@ Example request body with required parameters
     }
 ```
 
-2- GET - Get single user - HTTP Response Code: **401**
+2- PUT - Deactivate User account - HTTP Response Code: **401**
 ```json
     HTTP/1.1 401 Unauthorized
 ```
 
-3- GET - Get single user - HTTP Response Code: **403**
+3- PUT - Deactivate User account - HTTP Response Code: **403**
 ```json
     HTTP/1.1 403 Forbidden
     Content-Type: application/json
@@ -417,7 +417,7 @@ Example request body with required parameters
         "error": "You cannot do this!",
     }
 ```
-4- GET - Get single user - HTTP Response Code: **404**
+4- PUT - Deactivate User account - HTTP Response Code: **404**
 ```json
     HTTP/1.1 404
     Content-Type: application/json
@@ -427,7 +427,7 @@ Example request body with required parameters
     }
 ```
 
-5- GET - Get single user - HTTP Response Code: **500**
+5- PUT - Deactivate User account - HTTP Response Code: **500**
 ```json
     HTTP/1.1 500
     Content-Type: application/json
@@ -466,12 +466,12 @@ Example request body with role (1 - user, 101 - moderator)
     }
 ```
 
-2- GET - Change user role - HTTP Response Code: **401**
+2- PUT - Change user role - HTTP Response Code: **401**
 ```json
     HTTP/1.1 401 Unauthorized
 ```
 
-3- GET - Change user role - HTTP Response Code: **403**
+3- PUT - Change user role - HTTP Response Code: **403**
 ```json
     HTTP/1.1 403 Forbidden
     Content-Type: application/json
@@ -479,7 +479,7 @@ Example request body with role (1 - user, 101 - moderator)
         "error": "You cannot do this!",
     }
 ```
-4- GET - Change user role - HTTP Response Code: **404**
+4- PUT - Change user role - HTTP Response Code: **404**
 ```json
     HTTP/1.1 404
     Content-Type: application/json
@@ -489,7 +489,7 @@ Example request body with role (1 - user, 101 - moderator)
     }
 ```
 
-5- GET - Change user role - HTTP Response Code: **500**
+5- PUT - Change user role - HTTP Response Code: **500**
 ```json
     HTTP/1.1 500
     Content-Type: application/json
