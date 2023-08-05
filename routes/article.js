@@ -51,11 +51,10 @@ router.route('/').get(articleController.getArticles);
 router.route('/:id').get(articleController.getArticle);
 
 // Get all artciles for admin
-router.route('/admin').get(secure.authenticateUser, articleController.getArticlesForAdmin);
+router.route('/admin/all').get(secure.authenticateUser, articleController.getArticlesForAdmin);
 
 // Get the article for admin
 router.route('/admin/:id').get(secure.authenticateUser, articleController.getArticleForAdmin);
-
 
 // Add new article
 router.route('/new').post(secure.authenticateUser, upload.fields([

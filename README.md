@@ -853,7 +853,7 @@ This is an API example describing a article API.
 
 ### Response
 
-1- GET - Get public Article - HTTP Response Code: **200**
+1- GET - Get single public Article - HTTP Response Code: **200**
 ```json
     HTTP/1.1 200
     Content-Type: application/json
@@ -889,12 +889,12 @@ This is an API example describing a article API.
     }
 ```
 
-2- GET -  Get public Article - HTTP Response Code: **404**
+2- GET -  Get single public Article - HTTP Response Code: **404**
 ```json
     HTTP/1.1 404 Not Found
 ```
 
-3- GET - Get public Article - HTTP Response Code: **500**
+3- GET - Get single public Article - HTTP Response Code: **500**
 ```json
     HTTP/1.1 500
     Content-Type: application/json
@@ -909,7 +909,7 @@ This is an API example describing a article API.
 
 ### Request
 
-`GET /articles/admin`
+`GET /articles/admin/all`
 
 ### Response
 
@@ -918,26 +918,24 @@ This is an API example describing a article API.
     HTTP/1.1 200
     Content-Type: application/json
 
-    {
-        [
-            {
-                "_id": "64ad89872c07169e8060c9f8",
-                "title": "Test Title",
-                "description": "Test Desc",
-                "thumbnail": [
-                    {
-                        "url": "uploads\\thumbnail\\1689094535188.jpg",
-                        "_id": "64ad89872c07169e8060c9f9"
-                    },
-                    {
-                        "url": "uploads\\thumbnail\\1689097073530.jpg",
-                        "_id": "64ad9371f587ff9592ade175"
-                    }
-                ],
-                "createdAt": "2023-07-11T16:55:35.206Z"
-            }
-        ]
-    }
+    [
+        {
+            "_id": "64ad89872c07169e8060c9f8",
+            "title": "Test Title",
+            "description": "Test Desc",
+            "thumbnail": [
+                {
+                    "url": "uploads\\thumbnail\\1689094535188.jpg",
+                    "_id": "64ad89872c07169e8060c9f9"
+                },
+                {
+                    "url": "uploads\\thumbnail\\1689097073530.jpg",
+                    "_id": "64ad9371f587ff9592ade175"
+                }
+            ],
+            "createdAt": "2023-07-11T16:55:35.206Z"
+        }
+    ]
 ```
 
 2- GET - Get all Articles (only accessible by admin) - HTTP Response Code: **403**
@@ -956,11 +954,12 @@ This is an API example describing a article API.
 ```
 <br>
 
+
 ## Get single Article (also private - only accessible by admin) [GET]
 
 ### Request
 
-`GET /articles/:id`
+`GET /articles/admin/:id`
 
 ### Response
 
