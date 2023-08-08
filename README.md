@@ -828,9 +828,13 @@ This is an API example describing a article API.
                         "_id": "64ad9371f587ff9592ade175"
                     }
                 ],
-                "createdAt": "2023-07-11T16:55:35.206Z",
                 "isPublic": true,
-                "userId": "64a433c69dd8a9a9f7d876fb"
+                "createdAt": "2023-07-11T16:55:35.206Z",
+                "author": {
+                    "id": "64a433c69dd8a9a9f7d876fb",
+                    "firstName": "Test",
+                    "lastName": "Test"
+                }
             }
         ]
     }
@@ -882,12 +886,15 @@ This is an API example describing a article API.
             }
         ],
         "links": [
-            "test 2"
+            "test"
         ],
-        "createdAt": "2023-07-11T16:55:35.206Z",
         "isPublic": true,
-        "userId": "64a433c69dd8a9a9f7d876fb",
-        "__v": 3
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "author": {
+            "id": "64a433c69dd8a9a9f7d876fb",
+            "firstName": "Test",
+            "lastName": "Test"
+        }
     }
 ```
 
@@ -936,9 +943,13 @@ This is an API example describing a article API.
                         "_id": "64ad9371f587ff9592ade175"
                     }
                 ],
-                "createdAt": "2023-07-11T16:55:35.206Z",
                 "isPublic": true,
-                "userId": "64a433c69dd8a9a9f7d876fb"
+                "createdAt": "2023-07-11T16:55:35.206Z",
+                "author": {
+                    "id": "64a433c69dd8a9a9f7d876fb",
+                    "firstName": "Test",
+                    "lastName": "Test"
+                }
             }
         ]
     ]
@@ -996,12 +1007,15 @@ This is an API example describing a article API.
             }
         ],
         "links": [
-            "test 2"
+            "test"
         ],
+        "isPublic": true,
         "createdAt": "2023-07-11T16:55:35.206Z",
-        "isPublic": false,
-        "userId": "64a433c69dd8a9a9f7d876fb",
-        "__v": 3
+        "author": {
+            "id": "64a433c69dd8a9a9f7d876fb",
+            "firstName": "Test",
+            "lastName": "Test"
+        }
     }
 ```
 
