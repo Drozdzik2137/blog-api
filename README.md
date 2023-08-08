@@ -828,7 +828,9 @@ This is an API example describing a article API.
                         "_id": "64ad9371f587ff9592ade175"
                     }
                 ],
-                "createdAt": "2023-07-11T16:55:35.206Z"
+                "createdAt": "2023-07-11T16:55:35.206Z",
+                "isPublic": true,
+                "userId": "64a433c69dd8a9a9f7d876fb"
             }
         ]
     }
@@ -919,22 +921,26 @@ This is an API example describing a article API.
     Content-Type: application/json
 
     [
-        {
-            "_id": "64ad89872c07169e8060c9f8",
-            "title": "Test Title",
-            "description": "Test Desc",
-            "thumbnail": [
-                {
-                    "url": "uploads\\thumbnail\\1689094535188.jpg",
-                    "_id": "64ad89872c07169e8060c9f9"
-                },
-                {
-                    "url": "uploads\\thumbnail\\1689097073530.jpg",
-                    "_id": "64ad9371f587ff9592ade175"
-                }
-            ],
-            "createdAt": "2023-07-11T16:55:35.206Z"
-        }
+        [
+            {
+                "_id": "64ad89872c07169e8060c9f8",
+                "title": "Test Title",
+                "description": "Test Desc",
+                "thumbnail": [
+                    {
+                        "url": "uploads\\thumbnail\\1689094535188.jpg",
+                        "_id": "64ad89872c07169e8060c9f9"
+                    },
+                    {
+                        "url": "uploads\\thumbnail\\1689097073530.jpg",
+                        "_id": "64ad9371f587ff9592ade175"
+                    }
+                ],
+                "createdAt": "2023-07-11T16:55:35.206Z",
+                "isPublic": true,
+                "userId": "64a433c69dd8a9a9f7d876fb"
+            }
+        ]
     ]
 ```
 

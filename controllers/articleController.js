@@ -141,7 +141,7 @@ const editArticle = async (req, res) => {
 // Read all public articles
 const getArticles = async (req, res) => {
     try {
-        const articles = await Article.find({ isPublic: true }, 'title description thumbnail createdAt').lean();
+        const articles = await Article.find({ isPublic: true }, 'title description thumbnail isPublic userId createdAt').lean();
         res.status(200).json(articles);
     }catch(err){
         console.log('Error fetching articles:', err);
@@ -181,7 +181,7 @@ const getArticlesForAdmin = async (req, res) => {
             return res.sendStatus(403);
         }
         
-        const articles = await Article.find({}, 'title description thumbnail createdAt').lean();
+        const articles = await Article.find({}, 'title description thumbnail isPublic userId createdAt').lean();
         res.status(200).json(articles);
     }catch(err){
         console.log('Error fetching articles:', err);
