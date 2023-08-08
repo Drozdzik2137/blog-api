@@ -141,8 +141,24 @@ const editArticle = async (req, res) => {
 // Read all public articles
 const getArticles = async (req, res) => {
     try {
-        const articles = await Article.find({ isPublic: true }, 'title description thumbnail createdAt').lean();
-        res.status(200).json(articles);
+        const articles = await Article.find({ isPublic: true }, 'title description thumbnail isPublic userId createdAt')
+            .populate({ path: 'userId', select: 'firstName lastName'})
+            .lean();
+
+        const transformedArticles = articles.map(article => ({
+            _id: article._id,
+            title: article.title,
+            description: article.description,
+            thumbnail: article.thumbnail,
+            isPublic: article.isPublic,
+            createdAt: article.createdAt,
+            author: {
+                id: article.userId._id,
+                firstName: article.userId.firstName,
+                lastName: article.userId.lastName
+            }
+        }));
+        res.status(200).json(transformedArticles);
     }catch(err){
         console.log('Error fetching articles:', err);
         return res.status(500).json({ error: 'Failed to fetch articles' });
@@ -153,7 +169,8 @@ const getArticles = async (req, res) => {
 const getArticle = async (req, res) => {
     try {
         const { id } = req.params;
-        const article = await Article.findById(id);
+        const article = await Article.findById(id).populate('userId', 'firstName lastName').lean();
+        
         if(!article.isPublic){
             console.log("Unauthorized!");
             return res.sendStatus(403);
@@ -162,7 +179,23 @@ const getArticle = async (req, res) => {
             console.log('Article not found');
             return res.sendStatus(404);
         }
-        res.status(200).json(article);
+        const transformedArticle = {
+            _id: article._id,
+            title: article.title,
+            description: article.description,
+            content: article.content,
+            thumbnail: article.thumbnail,
+            images: article.images,
+            links: article.links,
+            isPublic: article.isPublic,
+            createdAt: article.createdAt,
+            author: {
+                id: article.userId._id,
+                firstName: article.userId.firstName,
+                lastName: article.userId.lastName
+            }
+        };
+        res.status(200).json(transformedArticle);
     }catch(err){
         console.log('Error fetching article:', err);
         return res.status(500).json({ error: 'Failed to fetch article' });
@@ -181,8 +214,24 @@ const getArticlesForAdmin = async (req, res) => {
             return res.sendStatus(403);
         }
         
-        const articles = await Article.find({}, 'title description thumbnail createdAt').lean();
-        res.status(200).json(articles);
+        const articles = await Article.find({}, 'title description thumbnail isPublic userId createdAt')
+            .populate({ path: 'userId', select: 'firstName lastName'})
+            .lean();
+
+        const transformedArticles = articles.map(article => ({
+            _id: article._id,
+            title: article.title,
+            description: article.description,
+            thumbnail: article.thumbnail,
+            isPublic: article.isPublic,
+            createdAt: article.createdAt,
+            author: {
+                id: article.userId._id,
+                firstName: article.userId.firstName,
+                lastName: article.userId.lastName
+            }
+        }));
+        res.status(200).json(transformedArticles);
     }catch(err){
         console.log('Error fetching articles:', err);
         return res.status(500).json({ error: 'Failed to fetch articles' });
@@ -202,13 +251,30 @@ const getArticleForAdmin = async (req, res) => {
         }
 
         const { id } = req.params;
+        const article = await Article.findById(id).populate('userId', 'firstName lastName').lean();
 
-        const article = await Article.findById(id);
         if (!article) {
             console.log('Article not found');
             return res.sendStatus(404);
         }
-        res.status(200).json(article);
+
+        const transformedArticle = {
+            _id: article._id,
+            title: article.title,
+            description: article.description,
+            content: article.content,
+            thumbnail: article.thumbnail,
+            images: article.images,
+            links: article.links,
+            isPublic: article.isPublic,
+            createdAt: article.createdAt,
+            author: {
+                id: article.userId._id,
+                firstName: article.userId.firstName,
+                lastName: article.userId.lastName
+            }
+        };
+        res.status(200).json(transformedArticle);
     }catch(err){
         console.log('Error fetching article:', err);
         return res.status(500).json({ error: 'Failed to fetch article' });

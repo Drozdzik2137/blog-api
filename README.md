@@ -828,7 +828,13 @@ This is an API example describing a article API.
                         "_id": "64ad9371f587ff9592ade175"
                     }
                 ],
-                "createdAt": "2023-07-11T16:55:35.206Z"
+                "isPublic": true,
+                "createdAt": "2023-07-11T16:55:35.206Z",
+                "author": {
+                    "id": "64a433c69dd8a9a9f7d876fb",
+                    "firstName": "Test",
+                    "lastName": "Test"
+                }
             }
         ]
     }
@@ -880,12 +886,15 @@ This is an API example describing a article API.
             }
         ],
         "links": [
-            "test 2"
+            "test"
         ],
-        "createdAt": "2023-07-11T16:55:35.206Z",
         "isPublic": true,
-        "userId": "64a433c69dd8a9a9f7d876fb",
-        "__v": 3
+        "createdAt": "2023-07-11T16:55:35.206Z",
+        "author": {
+            "id": "64a433c69dd8a9a9f7d876fb",
+            "firstName": "Test",
+            "lastName": "Test"
+        }
     }
 ```
 
@@ -919,22 +928,30 @@ This is an API example describing a article API.
     Content-Type: application/json
 
     [
-        {
-            "_id": "64ad89872c07169e8060c9f8",
-            "title": "Test Title",
-            "description": "Test Desc",
-            "thumbnail": [
-                {
-                    "url": "uploads\\thumbnail\\1689094535188.jpg",
-                    "_id": "64ad89872c07169e8060c9f9"
-                },
-                {
-                    "url": "uploads\\thumbnail\\1689097073530.jpg",
-                    "_id": "64ad9371f587ff9592ade175"
+        [
+            {
+                "_id": "64ad89872c07169e8060c9f8",
+                "title": "Test Title",
+                "description": "Test Desc",
+                "thumbnail": [
+                    {
+                        "url": "uploads\\thumbnail\\1689094535188.jpg",
+                        "_id": "64ad89872c07169e8060c9f9"
+                    },
+                    {
+                        "url": "uploads\\thumbnail\\1689097073530.jpg",
+                        "_id": "64ad9371f587ff9592ade175"
+                    }
+                ],
+                "isPublic": true,
+                "createdAt": "2023-07-11T16:55:35.206Z",
+                "author": {
+                    "id": "64a433c69dd8a9a9f7d876fb",
+                    "firstName": "Test",
+                    "lastName": "Test"
                 }
-            ],
-            "createdAt": "2023-07-11T16:55:35.206Z"
-        }
+            }
+        ]
     ]
 ```
 
@@ -990,12 +1007,15 @@ This is an API example describing a article API.
             }
         ],
         "links": [
-            "test 2"
+            "test"
         ],
+        "isPublic": true,
         "createdAt": "2023-07-11T16:55:35.206Z",
-        "isPublic": false,
-        "userId": "64a433c69dd8a9a9f7d876fb",
-        "__v": 3
+        "author": {
+            "id": "64a433c69dd8a9a9f7d876fb",
+            "firstName": "Test",
+            "lastName": "Test"
+        }
     }
 ```
 
