@@ -52,8 +52,10 @@ const userLogin = async (req, res) => {
             
                     // Transmission of secure cookies with refresh token
                     // res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'None', secure: true, maxAge: 24*60*60*1000});
+
                     // For testing in Postman - without secure
                     res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'None', maxAge: 24*60*60*1000});
+                    
                     res.status(200).json({accessToken});
                 }else{
                     return res.status(401).json({message: "Please enter correct login and password"})
