@@ -165,7 +165,7 @@ const getAllUsers = async (req, res) => {
     const user = await User.findById(id).select('-password -refreshToken');
 
     // Sprawdź, czy użytkownik jest administratorem
-    if (user.role !== 1001) {
+    if (user.role != 1001) {
       return res.status(403).json({ error: 'No authority to perform this operation' });
     }
 
