@@ -6,6 +6,7 @@ const corsOptions = require('./config/corsOptions');
 const secure = require('./middleware/authMiddleware');
 const credentials = require('./middleware/credentials');
 const db = require('./config/db');
+const path = require('path')
 require('dotenv').config();
 
 const app = express();
@@ -15,6 +16,9 @@ db.connectionToDB();
 
 // Needed for downloading cookies, must be before initialize cors settings
 app.use(credentials);
+
+// Public static files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware
 app.use(cors(corsOptions));
