@@ -149,7 +149,7 @@ RefreshToken in cookies
 
 ### Request
 
-`GET /auth/logout`
+`POST /auth/logout`
 
 ### Response
 
