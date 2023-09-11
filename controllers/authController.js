@@ -43,15 +43,15 @@ const userLogin = async (req, res) => {
                             "id": id
                         },
                         refreshSecret,
-                        {expiresIn: '1d'}
+                        {expiresIn: '7d'}
                     );
             
                     // Saving a refresh token in the database to the user
                     foundUser.refreshToken = refreshToken;
                     const result = await foundUser.save();
             
-                    // Transmission of secure cookies with refresh token
-                    // res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'None', secure: true, maxAge: 24*60*60*1000});
+                    // Transmission of secure cookies with refresh token for HTTPS
+                    // res.cookie('jwt', refreshToken, {httpOnly: true, path: '/',  sameSite: 'None', secure: true, maxAge: 24*60*60*1000});
 
                     // For testing in Postman - without secure
                     res.cookie('jwt', refreshToken, {httpOnly: true, path: '/', maxAge: 24*60*60*1000});
@@ -71,8 +71,15 @@ const userLogin = async (req, res) => {
 // Logout
 const userLogout = async (req, res) => {
     try {
+        const cookies = req.cookies;
+        if(cookies?.jwt){
+            const refreshToken = cookies.jwt;
+            // Check if token exist in DB and unset refreshToken from user
+            await User.findOneAndUpdate({ refreshToken }, { $unset: { refreshToken: 1 } });
+        }
+        // Delete cookie
         res.clearCookie('jwt', { httpOnly: true, path: '/' });
-        return res.status(200).json('Done.');
+        return res.status(200).json({ message: 'Successful logout' });
     } catch(err) {
         console.log('Error when logout:', err);
         return res.status(500).json({ error: 'Failed to logout' });
@@ -109,7 +116,7 @@ const checkRefreshToken = async (req, res) => {
                         "role": role  
                     },
                     process.env.ACCESS_TOKEN_SECRET,
-                    { expiresIn: '15m' }
+                    { expiresIn: '1h' }
                 );
                 // res.json({ roles, accessToken })
                 res.status(200).json({ accessToken })
