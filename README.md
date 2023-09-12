@@ -23,8 +23,22 @@ This is an API example describing a blog API.
 
  <br><br>
 
+
+# Links to sections
+
+- ## [Authorization routes](#authorization-routes-auth)
+
+- ## [User collection](#user-collection-users)
+
+- ## [Note collection](#note-collection-notes)
+
+- ## [Article collection](#article-collection-articles)
+
+- ## [Public static files](#public-static-files-collection-uploads)
+
+<br><br>
  
-# Authorization routes  [/auth]
+# Authorization routes [/auth]
 
 This is an API example describing a auth API.
 
@@ -127,6 +141,35 @@ RefreshToken in cookies
 
     {
         "error": "Failed to refresh token",
+    }
+```
+<br>
+
+## Logout route [POST]
+
+### Request
+
+`POST /auth/logout`
+
+### Response
+
+1- POST - Logout route - HTTP Response Code: **200**
+```json
+    HTTP/1.1 200
+    Content-Type: application/json
+
+    {
+        "message": "Successful logout"
+    }
+```
+
+2- POST - Logout route - HTTP Response Code: **500**
+```json
+    HTTP/1.1 500
+    Content-Type: application/json
+
+    {
+        "error": "Failed to logout",
     }
 ```
 <br><br>
@@ -1719,3 +1762,21 @@ Required files
     }
 ```
 <br><br>
+
+# Public static files collection [/uploads]
+
+On this endpoint, you can see the photos stored on the server. The uploads folder is divided into two subdirectories: gallery and thumbnail. The "gallery" folder contains folders with a name corresponding to the date it was created, and this is where the photos are stored. Thumbnails are stored directly in the "thumbnail" folder.
+
+## Static files on server storage
+
+### Example path
+
+`/uploads/thumbnail/1.jpg`
+
+`/uploads/gallery/2023-11-09/two-towers-wtc.jpg`
+
+### Response
+
+When the path is opened, the picture opens directly in the browser.
+
+<br>
