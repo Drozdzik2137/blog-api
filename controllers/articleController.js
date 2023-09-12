@@ -16,11 +16,11 @@ const deleteFile = (filePath) => {
 const addArticle = async (req, res) => {
     try{
         const userId = req.user.id;
-        const { title, description, content } = req.body;
+        const { title, description, content, isPublic } = req.body;
 
         const findUser = await User.findById(userId);
 
-        if(findUser.role !== 101 && findUser.role !== 1001){
+        if(findUser.role != 101 && findUser.role != 1001){
             console.log("Unauthorized!");
             // Delete updated thumbnail
             if (req.files.thumbnail && req.files.thumbnail.length > 0) {
@@ -62,7 +62,8 @@ const addArticle = async (req, res) => {
                 images: images,
                 links: links, 
                 createdAt: new Date(), 
-                userId: userId
+                userId: userId,
+                isPublic: Boolean(isPublic)
             });
             
             findUser.articles.push(newArticle._id);
@@ -150,7 +151,7 @@ const getArticles = async (req, res) => {
             title: article.title,
             description: article.description,
             thumbnail: article.thumbnail,
-            isPublic: article.isPublic,
+            isPublic: Boolean(article.isPublic),
             createdAt: article.createdAt,
             author: {
                 id: article.userId._id,
