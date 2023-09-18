@@ -55,11 +55,13 @@ const userLogin = async (req, res) => {
 
                     // For testing in Postman - without secure
                     // res.cookie('jwt', refreshToken, {httpOnly: true, path: '/', maxAge: 24*60*60*1000});
+
+                    // Cookie for HTTPS site on same domain (subdomain)
                     res.cookie('jwt', refreshToken, {
-                        domain: '.iwhitewolf.it', // Domena
-                        secure: true,         // Bezpieczne połączenie HTTPS
-                        httpOnly: true,       // Dostępne tylko przez serwer
-                        sameSite: 'strict',    // Ograniczenie dostępu do tej samej strony
+                        domain: '.iwhitewolf.it', // Domain
+                        secure: true,         // Secure HTTPS connection
+                        httpOnly: true,       // Only available via server
+                        sameSite: 'strict',    // Restriction of access to the same site
                         path: '/', 
                         maxAge: 24*60*60*1000
                     });
