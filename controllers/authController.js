@@ -54,7 +54,17 @@ const userLogin = async (req, res) => {
                     // res.cookie('jwt', refreshToken, {httpOnly: true, path: '/',  sameSite: 'None', secure: true, maxAge: 24*60*60*1000});
 
                     // For testing in Postman - without secure
-                    res.cookie('jwt', refreshToken, {httpOnly: true, path: '/', maxAge: 24*60*60*1000});
+                    // res.cookie('jwt', refreshToken, {httpOnly: true, path: '/', maxAge: 24*60*60*1000});
+
+                    // Cookie for HTTPS site on same domain (subdomain)
+                    res.cookie('jwt', refreshToken, {
+                        domain: '.iwhitewolf.it', // Domain
+                        secure: true,         // Secure HTTPS connection
+                        httpOnly: true,       // Only available via server
+                        sameSite: 'strict',    // Restriction of access to the same site
+                        path: '/', 
+                        maxAge: 24*60*60*1000
+                    });
                     res.status(200).json({accessToken});
                 }else{
                     return res.status(401).json({message: "Please enter correct login and password"})
