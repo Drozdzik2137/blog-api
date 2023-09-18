@@ -19,7 +19,7 @@ This is an API example describing a blog API.
 
 ### Endpoint format for this api
 
- >  http://localhost:5000/api/
+ >  http://localhost:5000/v1/
 
  <br><br>
 
