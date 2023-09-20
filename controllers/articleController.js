@@ -92,7 +92,7 @@ const editArticle = async (req, res) => {
     try{
         const userId = req.user.id;
         const { id: articleId } = req.params;
-        const { title, description, content } = req.body;
+        const { title, description, content, isPublic } = req.body;
 
         const findUser = await User.findById(userId);
 
@@ -110,24 +110,26 @@ const editArticle = async (req, res) => {
         }else{
             const links =  req.body.link ? req.body.link : [];
 
-            const findArticle = await Article.findById(articleId);
+            const findArticle = await Article.findById(articleId).lean();
 
             if(!findArticle){
                 console.log("Article not exist!");
                 return res.sendStatus(404);
             }
 
+            const isPublicValue = isPublic !== undefined ? Boolean(isPublic) : findArticle.isPublic;
+
             if(links.length > 0){
                 const updatedArticle = await Article.findByIdAndUpdate(
                     articleId,
-                    { title: title, description: description, content: content, links: links, userId: userId },
+                    { title: title, description: description, content: content, links: links, isPublic: isPublicValue, userId: userId },
                     { new: true }
                 );
                 res.status(201).json(updatedArticle);                    
             }else{
                 const updatedArticle = await Article.findByIdAndUpdate(
                     articleId,
-                    { title: title, description: description, content: content, userId: userId },
+                    { title: title, description: description, content: content, isPublic: isPublicValue, userId: userId },
                     { new: true }
                 );
                 res.status(201).json(updatedArticle);    
@@ -592,7 +594,6 @@ const changeToPrivate = async (req, res) => {
         }
 
         if(id){
-
             // Read the article you want to change to public
             const article = await Article.findById(id);
 
