@@ -592,7 +592,6 @@ const changeToPrivate = async (req, res) => {
         }
 
         if(id){
-
             // Read the article you want to change to public
             const article = await Article.findById(id);
 
