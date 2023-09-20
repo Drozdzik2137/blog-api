@@ -117,7 +117,7 @@ const editArticle = async (req, res) => {
                 return res.sendStatus(404);
             }
 
-            const isPublicValue = isPublic ? Boolean(req.body.isPublic) : findArticle.isPublic;
+            const isPublicValue = isPublic !== undefined ? Boolean(isPublic) : findArticle.isPublic;
 
             if(links.length > 0){
                 const updatedArticle = await Article.findByIdAndUpdate(
