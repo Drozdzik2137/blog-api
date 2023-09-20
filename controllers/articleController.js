@@ -92,7 +92,7 @@ const editArticle = async (req, res) => {
     try{
         const userId = req.user.id;
         const { id: articleId } = req.params;
-        const { title, description, content } = req.body;
+        const { title, description, content, isPublic } = req.body;
 
         const findUser = await User.findById(userId);
 
@@ -104,7 +104,7 @@ const editArticle = async (req, res) => {
         // Changed to edit only content of article
         // const images = req.files.map(file => ({ url: file.path, isMain: false }));
 
-        if(!title || !description || !content){
+        if(!title || !description || !content || !isPublic){
             console.log("Missing data!");
             return res.sendStatus(400);
         }else{
@@ -120,14 +120,14 @@ const editArticle = async (req, res) => {
             if(links.length > 0){
                 const updatedArticle = await Article.findByIdAndUpdate(
                     articleId,
-                    { title: title, description: description, content: content, links: links, userId: userId },
+                    { title: title, description: description, content: content, links: links, isPublic: Boolean(isPublic), userId: userId },
                     { new: true }
                 );
                 res.status(201).json(updatedArticle);                    
             }else{
                 const updatedArticle = await Article.findByIdAndUpdate(
                     articleId,
-                    { title: title, description: description, content: content, userId: userId },
+                    { title: title, description: description, content: content, isPublic: Boolean(isPublic), userId: userId },
                     { new: true }
                 );
                 res.status(201).json(updatedArticle);    
